@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Book10</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="book">BOOK</string>
+    <string name="ten">10</string>
+    <string name="sign_in">Sign In</string>
+    <string name="user_email">Email Address:</string>
+    <string name="email_hint">Enter email here</string>
+    <string name="email_confirm">Re-enter email to confirm:</string>
+    <string name="new_user">New User? Click here:</string>
+    <string name="setup_account">Account Setup</string>
+    <string name="submit">Submit</string>
+    <string name="failed_login">Sorry, that email is not yet registered. Please check to make sure your email is entered correctly.</string>
+    <string name="new_user_email_match_error">Sorry, your email address does not match the confirmation email address.</string>
+    <string name="new_user_email_already_registered">This email address is already registered, login with that email or enter a different one.</string>
+
+</resources>
