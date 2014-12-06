@@ -53,8 +53,7 @@ public class UserNewAccountFragment extends Fragment implements View.OnClickList
                 SharedPreferences.Editor prefEditor = sharedPreferences.edit();
                 prefEditor.putString("username", userEmail);
                 //add user id to Parse
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.popBackStack();
+                getFragmentManager().popBackStack();
             } else {
                 Toast.makeText(getActivity(), R.string.new_user_email_already_registered, Toast.LENGTH_SHORT).show();
             }

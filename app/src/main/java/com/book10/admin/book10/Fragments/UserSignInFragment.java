@@ -76,11 +76,10 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
     }
 
     private void newUserSelected() {
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         UserNewAccountFragment newAccount = new UserNewAccountFragment();
-        fragmentTransaction.replace(R.id.container, newAccount);
-        fragmentTransaction.addToBackStack("sign in");
-        fragmentTransaction.commit();
-
+        getFragmentManager().beginTransaction()
+            .replace(R.id.container, newAccount)
+            .addToBackStack("sign in")
+            .commit();
     }
 }
