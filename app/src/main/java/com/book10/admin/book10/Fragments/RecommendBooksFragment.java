@@ -1,8 +1,6 @@
 package com.book10.admin.book10.Fragments;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,11 +12,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.book10.admin.book10.Models.BooksModel;
 import com.book10.admin.book10.R;
-
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +30,7 @@ public class RecommendBooksFragment extends ListFragment{
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final BookListAdapter adapter = new BookListAdapter(getActivity());
-        List<BooksModel> recommendedBooks;
+        List<BooksModel> recommendedBooks = new ArrayList<BooksModel>();
         //get saved array of recommendations from local Parse save
         if (recommendedBooks.size() == 0) {
             sendToFavoriteBooks();

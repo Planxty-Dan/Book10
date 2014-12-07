@@ -18,11 +18,11 @@
     <string name="new_user_email_already_registered">This email address is already registered, login with that email or enter a different one.</string>
     <string name="by">By: </string>
     <string name="send_to_favorites_toast">For Book10 make recommendations we require you to enter your 10 favorite books.
-        It might take a few minutes but you'll only have to do it once.</string>
+        It might take a few minutes but you\'ll only have to do it once.</string>
     <string name="ok_button">Ok</string>
     <string name="no_favorites_entered_dialog">Enter your ten favorites books,
         as you enter each one we will check to make sure the correct book was found and then add it to your list.
-        Once all ten are entered we'll recommend some books that you'll enjoy.</string>
+        Once all ten are entered we\'ll recommend some books that you\'ll enjoy.</string>
     <string name="enter_book_title">Book Title: </string>
     <string name="edittext_hint_enter_book_title">Title</string>
     <string name="enter_book_author">Book Author: </string>
