@@ -1,13 +1,10 @@
 package com.book10.admin.book10.Fragments;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.app.ListFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.book10.admin.book10.Models.BooksModel;
@@ -25,7 +22,7 @@ public class FavoriteBooksFragment extends ListFragment{
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //get local saved favorites
-        numberOfFavoritesEneterChecker();
+        numberOfFavoritesEnteredChecker();
     }
 
     @Override
@@ -33,15 +30,9 @@ public class FavoriteBooksFragment extends ListFragment{
         super.onListItemClick(l, v, position, id);
     }
 
-    private void numberOfFavoritesEneterChecker() {
+    private void numberOfFavoritesEnteredChecker() {
         if (favoriteBooks.size() == 0) {
             noFavoritesEntered();
-        }
-        else if (favoriteBooks.size() > 0 && favoriteBooks.size() < 10) {
-
-        }
-        else {
-
         }
     }
 

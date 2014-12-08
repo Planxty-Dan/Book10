@@ -28,5 +28,7 @@
     <string name="enter_book_author">Book Author: </string>
     <string name="edittext_hint_enter_book_author">Author</string>
     <string name="cancel">Cancel</string>
+    <string name="login_success">Successfully logged in.</string>
+    <string name="parse_exception_create_login">Unable to create account because of exception: </string>
 
 </resources>

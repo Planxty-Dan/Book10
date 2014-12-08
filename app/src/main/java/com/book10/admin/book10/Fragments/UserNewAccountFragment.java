@@ -14,12 +14,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.book10.admin.book10.R;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 /**
  * Created by admin on 12/3/14.
  */
 public class UserNewAccountFragment extends Fragment implements View.OnClickListener{
 
+    private final String PASSWORD = "1111";
     private EditText enterEmail;
     private EditText confirmEmail;
     private Button submitNewUser;
@@ -47,18 +51,32 @@ public class UserNewAccountFragment extends Fragment implements View.OnClickList
     private void newUserSubmitted() {
         String userEmail = enterEmail.getText().toString();
         String userConfirmEmail = confirmEmail.getText().toString();
-        if (userEmail.equals(userConfirmEmail)) {
-            if (true) { //check parse for email already existing
-                SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-                SharedPreferences.Editor prefEditor = sharedPreferences.edit();
-                prefEditor.putString("username", userEmail);
-                //add user id to Parse
-                getFragmentManager().popBackStack();
-            } else {
-                Toast.makeText(getActivity(), R.string.new_user_email_already_registered, Toast.LENGTH_SHORT).show();
-            }
+        if (checkEmail(userEmail, userConfirmEmail)) {
+            ParseUser parseUser = new ParseUser();
+            parseUser.setUsername(userEmail);
+            parseUser.setPassword(PASSWORD);
+            parseUser.setEmail(userEmail);
+            parseUser.signUpInBackground(new SignUpCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e == null) {
+                        Toast.makeText(getActivity(), R.string.login_success, Toast.LENGTH_SHORT).show();
+                        getFragmentManager().popBackStack();
+                    } else {
+                        Toast.makeText(getActivity(), R.string.parse_exception_create_login + e.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         } else {
             Toast.makeText(getActivity(), R.string.new_user_email_match_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean checkEmail(String userEmail, String confirmationEmail) {
+        if (userEmail.equals(confirmationEmail)) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

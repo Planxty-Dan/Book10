@@ -13,16 +13,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.book10.admin.book10.R;
+import com.parse.LogInCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 /**
  * Created by admin on 12/2/14.
  */
 public class UserSignInFragment extends Fragment implements View.OnClickListener{
 
+    private final String PASSWORD = "1111";
     private EditText enterEmail;
     private Button submitEmail;
     private Button newUser;
     private SharedPreferences sharedPreferences;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,16 +69,17 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
     }
 
     private void signIn() {
-        String usersEntry = enterEmail.getText().toString();
-        if (true) {  //check parse for login
-            SharedPreferences.Editor prefEditor = sharedPreferences.edit();
-            prefEditor.putString("username", usersEntry);
-            //set up Parse login here
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.popBackStack();
-        } else {
-            Toast.makeText(getActivity(), R.string.failed_login, Toast.LENGTH_SHORT).show();
-        }
+        String usersSignIn = enterEmail.getText().toString();
+        ParseUser.logInInBackground(usersSignIn, PASSWORD, new LogInCallback() {
+            @Override
+            public void done(ParseUser parseUser, ParseException e) {
+                if (parseUser != null) {
+                    Toast.makeText(getActivity(), R.string.login_success, Toast.LENGTH_SHORT).show();
+
+                } else
+                    Toast.makeText(getActivity(), R.string.failed_login, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void newUserSelected() {
