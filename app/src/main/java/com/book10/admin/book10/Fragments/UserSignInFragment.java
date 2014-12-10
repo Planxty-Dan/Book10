@@ -27,13 +27,11 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
     private EditText enterEmail;
     private Button submitEmail;
     private Button newUser;
-    private SharedPreferences sharedPreferences;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.fragment_user_sign_in, container, false);
-        sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         enterEmail = (EditText) rootview.findViewById(R.id.email_edittext);
         submitEmail = (Button) rootview.findViewById(R.id.submit_email_sign_in);
         newUser = (Button) rootview.findViewById(R.id.new_user_button);

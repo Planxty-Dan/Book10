@@ -14,6 +14,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.book10.admin.book10.Models.BooksModel;
 import com.book10.admin.book10.R;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,16 +26,19 @@ import java.util.List;
  */
 public class RecommendBooksFragment extends ListFragment{
 
+    private final String RECCOMENDED_KEY = "recommendations";
     private TextView bookTitle;
     private TextView bookAuthor;
     private Button deleteButton;
+    private ArrayList<BooksModel> recommendedBooks = new ArrayList<BooksModel>();
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final BookListAdapter adapter = new BookListAdapter(getActivity());
-        List<BooksModel> recommendedBooks = new ArrayList<BooksModel>();
-        //get saved array of recommendations from local Parse save
+        //recommendedbooks = get recommended books from localdatastore
+        final BookListAdapter adapter = new BookListAdapter(getActivity(), recommendedBooks);
+
         if (recommendedBooks.size() == 0) {
             sendToFavoriteBooks();
         }
@@ -62,10 +69,15 @@ public class RecommendBooksFragment extends ListFragment{
         dialog.show();
     }
 
+
+
     public class BookListAdapter extends ArrayAdapter<BooksModel> {
 
-        public BookListAdapter(Context context) {
+        ArrayList<BooksModel> bookList = new ArrayList<BooksModel>();
+
+        public BookListAdapter(Context context, ArrayList<BooksModel> bookList) {
             super(context, android.R.layout.simple_list_item_1);
+            this.bookList = bookList;
         }
 
         @Override
@@ -74,7 +86,16 @@ public class RecommendBooksFragment extends ListFragment{
             bookTitle = (TextView) rowView.findViewById(R.id.book_title);
             bookAuthor = (TextView) rowView.findViewById(R.id.book_author);
             deleteButton = (Button) rowView.findViewById(R.id.delete_button);
-            //set fields to arraylist
+
+            BooksModel currentBook = getItem(position);
+            bookTitle.setText(currentBook.getBookTitle());
+            bookAuthor.setText(currentBook.getBookAuthor());
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    remove
+                }
+            });
             return rowView;
         }
     }

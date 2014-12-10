@@ -11,6 +11,10 @@ public class BooksModel {
     private String bookDescription;
     private String bookImage;
 
+    public BooksModel() {
+
+    }
+
     public BooksModel(String googleBooksID, String bookTitle, String bookAuthor, String bookGenre, String bookDescription, String bookImage) {
         this.googleBooksID = googleBooksID;
         this.bookTitle = bookTitle;

@@ -15,6 +15,7 @@ public class Book10Application extends Application{
 
     @Override
     public void onCreate() {
+        Parse.enableLocalDatastore(this);
         Parse.initialize(this, APPLICATION_ID, CLIENT_ID);
     }
 
