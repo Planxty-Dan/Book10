@@ -61,7 +61,10 @@ public class UserNewAccountFragment extends Fragment implements View.OnClickList
                 public void done(ParseException e) {
                     if (e == null) {
                         Toast.makeText(getActivity(), R.string.login_success, Toast.LENGTH_SHORT).show();
-                        getFragmentManager().popBackStack();
+                        RecommendBooksFragment recommendBooksFragment = new RecommendBooksFragment();
+                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.container, null);
+                        fragmentTransaction.commit();
                     } else {
                         Toast.makeText(getActivity(), R.string.parse_exception_create_login + e.toString(), Toast.LENGTH_LONG).show();
                     }

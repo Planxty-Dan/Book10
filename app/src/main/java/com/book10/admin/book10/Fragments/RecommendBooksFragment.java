@@ -93,7 +93,7 @@ public class RecommendBooksFragment extends ListFragment{
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    remove
+
                 }
             });
             return rowView;

@@ -35,7 +35,6 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
         enterEmail = (EditText) rootview.findViewById(R.id.email_edittext);
         submitEmail = (Button) rootview.findViewById(R.id.submit_email_sign_in);
         newUser = (Button) rootview.findViewById(R.id.new_user_button);
-        populateEditText();
         submitEmail.setOnClickListener(this);
         newUser.setOnClickListener(this);
 
@@ -54,18 +53,6 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        populateEditText();
-    }
-
-    private void populateEditText() {
-        if (sharedPreferences.getString("username", null) != null) {
-            enterEmail.setText(sharedPreferences.getString("username", null));
-        }
-    }
-
     private void signIn() {
         String usersSignIn = enterEmail.getText().toString();
         ParseUser.logInInBackground(usersSignIn, PASSWORD, new LogInCallback() {
@@ -73,7 +60,8 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
             public void done(ParseUser parseUser, ParseException e) {
                 if (parseUser != null) {
                     Toast.makeText(getActivity(), R.string.login_success, Toast.LENGTH_SHORT).show();
-
+                    FragmentManager fragmentManager = getFragmentManager();
+                    fragmentManager.popBackStack();
                 } else
                     Toast.makeText(getActivity(), R.string.failed_login, Toast.LENGTH_SHORT).show();
             }
@@ -82,9 +70,8 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
 
     private void newUserSelected() {
         UserNewAccountFragment newAccount = new UserNewAccountFragment();
-        getFragmentManager().beginTransaction()
-            .replace(R.id.container, newAccount)
-            .addToBackStack("sign in")
-            .commit();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.container, newAccount)
+                .commit();
     }
 }

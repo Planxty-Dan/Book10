@@ -1,6 +1,7 @@
 package com.book10.admin.book10;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import com.book10.admin.book10.Fragments.RecommendBooksFragment;
 import com.book10.admin.book10.Fragments.UserSignInFragment;
@@ -40,8 +41,8 @@ public class MainActivity extends Activity {
 
     protected void userSignIn() {
         UserSignInFragment signInFragment = new UserSignInFragment();
-        getFragmentManager().beginTransaction()
-            .add(R.id.container, signInFragment)
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, signInFragment)
             .addToBackStack("main")
             .commit();
     }

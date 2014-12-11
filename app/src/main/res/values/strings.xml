@@ -30,13 +30,13 @@
     <string name="cancel">Cancel</string>
     <string name="login_success">Successfully logged in.</string>
     <string name="parse_exception_create_login">Unable to create account because of exception: </string>
-    <string name="favorite_added_confirm_title">The book you're adding is:</string>
+    <string name="favorite_added_confirm_title">The book you\'re adding is:</string>
     <string name="correct_question">Correct?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="declined_favorites_confirmation">Sorry, please enter again.</string>
     <string name="favorite_book_added">This Book has been added to your favorites.</string>
-    <string name="finished_entering_favorites">That's all 10!  Give us a moment and well get your recommendations.</string>
+    <string name="finished_entering_favorites">That\'s all 10!  Give us a moment and well get your recommendations.</string>
 
 
 </resources>
