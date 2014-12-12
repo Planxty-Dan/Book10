@@ -34,8 +34,8 @@ import java.util.zip.Inflater;
  */
 public class FavoriteBooksFragment extends ListFragment{
 
-    private final String FAVORITES_KEY = "userFavorites";
-    private final String BOOK_KEY = "book";
+    private final String FAVORITES_KEY = "UserFavorites";
+    private final String BOOK_KEY = "Book";
     private BookListAdapter adapter;
     public ArrayList<BooksModel> favoriteBooks = new ArrayList<BooksModel>();
     private ArrayList<BooksModel> tempBookStorage = new ArrayList<BooksModel>();
@@ -43,25 +43,18 @@ public class FavoriteBooksFragment extends ListFragment{
     private TextView bookAuthor;
     private Button deleteButton;
     private int googleBooksArrayIndex = 0;
+    private ParseObject bookObject;
+    private String userEnteredTitle;
+    private String userEnteredAuthor;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         adapter = new BookListAdapter(getActivity());
-        ParseQuery<ParseObject> favoriteBooksParseQuery = ParseQuery.getQuery(FAVORITES_KEY);
-        favoriteBooksParseQuery.whereExists(FAVORITES_KEY);
-        favoriteBooksParseQuery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
-                if (e == null) {
-                    favoriteBooks = (ArrayList) parseObjects;
-                } else {
-                    Log.d("Error", e.getMessage());
-                }
-            }
-        });
         numberOfFavoritesEnteredChecker();
         setListAdapter(adapter);
+
+
     }
 
     @Override
@@ -93,21 +86,19 @@ public class FavoriteBooksFragment extends ListFragment{
 
     private void enterBooks() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setView(getActivity().getLayoutInflater().inflate(R.layout.dialog_enter_favorite_book_form, null))
-            .setView(getView().findViewById(R.id.enter_title))
-            .setView(getView().findViewById(R.id.enter_author))
-            .setPositiveButton(R.string.submit, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    View rootView = View.inflate(getActivity(), R.layout.dialog_enter_favorite_book_form, null);
-                    EditText enterTitle = (EditText) rootView.findViewById(R.id.enter_title);
-                    EditText enterAuthor = (EditText) rootView.findViewById(R.id.enter_author);
-                    String title = enterTitle.getText().toString();
-                    String author = enterAuthor.getText().toString();
-                    checkEnteredBook(title, author);
-                    dialog.dismiss();
-                }
-            })
+        View rootView = View.inflate(getActivity(), R.layout.dialog_enter_favorite_book_form, null);
+        builder.setView(rootView);
+        final EditText enterTitle = (EditText) rootView.findViewById(R.id.enter_title);
+        final EditText enterAuthor = (EditText) rootView.findViewById(R.id.enter_author);
+        builder.setPositiveButton(R.string.submit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                userEnteredTitle = enterTitle.getText().toString();
+                userEnteredAuthor = enterAuthor.getText().toString();
+                checkEnteredBook();
+                dialog.dismiss();
+            }
+        })
             .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -118,20 +109,18 @@ public class FavoriteBooksFragment extends ListFragment{
         dialog.show();
     }
 
-    private void checkEnteredBook(String title, String author) {
+    private void checkEnteredBook() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View rootView = View.inflate(getActivity(), R.layout.dialog_confirm_added_favorite, null);
         builder.setView(rootView);
         final TextView bookTitle = (TextView) rootView.findViewById(R.id.confirmation_title);
         final TextView bookAuthor = (TextView) rootView.findViewById(R.id.confirm_author);
-        GoogleBooksAPI googleBooksAPI = new GoogleBooksAPI(getActivity(), title, author, new GoogleBooksAPI.OnGoogleBooksDataLoadedListener() {
+        GoogleBooksAPI googleBooksAPI = new GoogleBooksAPI(getActivity(), userEnteredTitle, userEnteredAuthor, new GoogleBooksAPI.OnGoogleBooksDataLoadedListener() {
             @Override
             public void dataLoaded(List<BooksModel> books) {
-                bookTitle.setText(books.get(0).getBookTitle());
-                bookAuthor.setText(books.get(0).getBookAuthor());
-//                builder.setView(bookTitle);
-//                builder.setView(bookAuthor);
-                tempBookStorage.add(books.get(0));
+                bookTitle.setText(books.get(googleBooksArrayIndex).getBookTitle());
+                bookAuthor.setText(books.get(googleBooksArrayIndex).getBookAuthor());
+                tempBookStorage = (ArrayList<BooksModel>) books;
             }
         });
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -146,27 +135,26 @@ public class FavoriteBooksFragment extends ListFragment{
                 declinedFavorites(dialog);
             }
         });
+        googleBooksAPI.execute();
         AlertDialog dialog = builder.create();
         dialog.show();
-        googleBooksAPI.execute();
+
     }
 
     public void acceptedFavorites(DialogInterface dialog) {
-        favoriteBooks.add(tempBookStorage.get(0));
+        favoriteBooks.add(tempBookStorage.get(googleBooksArrayIndex));
         ParseQuery bookAlreadyAddedQuery = ParseQuery.getQuery(BOOK_KEY);
         bookAlreadyAddedQuery.whereEqualTo("googleID", tempBookStorage.get(0).getGoogleBooksID());
-        bookAlreadyAddedQuery.getFirstInBackground(new GetCallback() {
+        bookAlreadyAddedQuery.getFirstInBackground( new GetCallback() {
             @Override
             public void done(ParseObject parseObject, ParseException e) {
-              if (e == null) {
-                    saveFavoritesToParse(parseObject);
-                } else {
-                  Log.d("Error", e.getMessage());
-              }
+                BooksModel tempBook = favoriteBooks.get(googleBooksArrayIndex);
+                saveFavoritesToParse(parseObject, tempBook);
             }
         });
         adapter.notifyDataSetChanged();
         tempBookStorage.clear();
+        googleBooksArrayIndex = 0;
         if (favoriteBooks.size() < 10) {
             enterBooks();
         } else {
@@ -176,29 +164,27 @@ public class FavoriteBooksFragment extends ListFragment{
     }
 
     public void declinedFavorites(DialogInterface dialog) {
-        tempBookStorage.remove(0);
-        Toast.makeText(getActivity(), R.string.declined_favorites_confirmation, Toast.LENGTH_SHORT).show();
-        enterBooks();
+        googleBooksArrayIndex++;
+        checkEnteredBook();
         dialog.dismiss();
     }
 
-    public void saveFavoritesToParse(ParseObject parseObject) {
-        if (parseObject == null) {
-            final ParseObject bookObject = new ParseObject(BOOK_KEY);
-            bookObject.put("googleID", tempBookStorage.get(0).getGoogleBooksID());
-            bookObject.put("title", tempBookStorage.get(0).getBookTitle());
-            bookObject.put("author", tempBookStorage.get(0).getBookAuthor());
-            bookObject.put("genre", tempBookStorage.get(0).getBookGenre());
-            bookObject.put("description", tempBookStorage.get(0).getBookDescription());
-            bookObject.put("imageUrl", tempBookStorage.get(0).getBookImage());
-            bookObject.put(ParseUser.getCurrentUser().toString(), bookObject);
+    public void saveFavoritesToParse(ParseObject parseObject, BooksModel tempBook) {
+        if (parseObject == null || parseObject.equals("")) {
+            bookObject = new ParseObject(BOOK_KEY);
+            bookObject.put("googleID", tempBook.getGoogleBooksID());
+            bookObject.put("title", tempBook.getBookTitle());
+            bookObject.put("author", tempBook.getBookAuthor());
+            bookObject.put("genre", tempBook.getBookGenre());
+            bookObject.put("description", tempBook.getBookDescription());
+            bookObject.put("imageUrl", tempBook.getBookImage());
             bookObject.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
                     if (e == null) {
                         ParseObject userFavoriteObject = new ParseObject(FAVORITES_KEY);
                         userFavoriteObject.put("user", ParseUser.getCurrentUser());
-                        userFavoriteObject.put("book", bookObject.getObjectId());
+                        userFavoriteObject.put("book", ParseObject.createWithoutData(BOOK_KEY, bookObject.getObjectId()));
                         userFavoriteObject.saveInBackground();
                     }
                 }
@@ -206,7 +192,7 @@ public class FavoriteBooksFragment extends ListFragment{
         } else {
             ParseObject userFavoriteObject = new ParseObject(FAVORITES_KEY);
             userFavoriteObject.put("user", ParseUser.getCurrentUser());
-            userFavoriteObject.put("book", parseObject.getObjectId());
+            userFavoriteObject.put("book", ParseObject.createWithoutData(BOOK_KEY, parseObject.getObjectId()));
             userFavoriteObject.saveInBackground();
         }
     }

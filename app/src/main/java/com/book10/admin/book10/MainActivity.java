@@ -14,22 +14,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        checkLogin();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkLogin();
-    }
-
-    protected void checkLogin() {
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        if (currentUser == null) {
-            userSignIn();
-        } else {
-            toRecommendedBooksFragment();
-        }
+        toRecommendedBooksFragment();
     }
 
     protected void toRecommendedBooksFragment() {
@@ -39,11 +24,5 @@ public class MainActivity extends Activity {
                 .commit();
     }
 
-    protected void userSignIn() {
-        UserSignInFragment signInFragment = new UserSignInFragment();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.container, signInFragment)
-            .addToBackStack("main")
-            .commit();
-    }
+
 }

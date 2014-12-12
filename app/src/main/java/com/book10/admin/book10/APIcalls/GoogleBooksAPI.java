@@ -12,8 +12,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class GoogleBooksAPI extends AsyncTask {
     private final String PATH_ONE = "books";
     private final String PATH_TWO = "v1";
     private final String PATH_THREE = "volumes";
-    private final String QUERY = "q";
+    private final String QUERY = "q=";
     private final String QUERY_PARAMETER_TITLE = "intitle:";
     private final String QUERY_PARAMETER_AUTHOR = "inauthor:";
     private final String QUERY_PARAMTER_MAX_RESULTS = "maxResults";
@@ -70,13 +72,11 @@ public class GoogleBooksAPI extends AsyncTask {
     protected Object doInBackground(Object[] params) {
         InputStream inputStream;
         HttpsURLConnection urlConnection;
-        String fullURL;
         String line;
         try {
             StringBuilder stringBuilder = new StringBuilder();
             URL googleBooksURL = new URL(buildURI());
             urlConnection = (HttpsURLConnection) googleBooksURL.openConnection();
-            urlConnection.setRequestMethod("GET");
             inputStream = urlConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             while ((line = bufferedReader.readLine()) != null) {
@@ -88,7 +88,7 @@ public class GoogleBooksAPI extends AsyncTask {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d("IO exception", e.getMessage());
         }
         return searchResult;
     }
@@ -98,7 +98,7 @@ public class GoogleBooksAPI extends AsyncTask {
         super.onPostExecute(o);
         progressDialog.dismiss();
         if (searchResult == null) {
-            Log.v("NULL TAG", "null search results in Etsy post ex");
+            Log.v("NULL TAG", "null search results in googleAPI post ex");
         }
         else {
             ParseGoogleBooksJson jsonData = new ParseGoogleBooksJson(searchResult);
@@ -107,18 +107,25 @@ public class GoogleBooksAPI extends AsyncTask {
         }
     }
 
-    private String buildURI() {
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme(SCHEME)
-                .authority(AUTHORITY)
-                .appendPath(PATH_ONE)
-                .appendPath(PATH_TWO)
-                .appendPath(PATH_THREE)
-                .appendPath(QUERY)
-                .appendQueryParameter(QUERY_PARAMETER_TITLE, bookTitle)
-                .appendQueryParameter(QUERY_PARAMETER_AUTHOR, bookAuthor)
-                .appendQueryParameter(QUERY_PARAMTER_MAX_RESULTS, MAX_RESULTS_3)
-                .appendQueryParameter(KEY, API_KEY);
-        return builder.build().toString();
+    private String buildURI() throws UnsupportedEncodingException {
+//        Uri.Builder builder = new Uri.Builder();
+//        builder.scheme(SCHEME)
+//                .authority(AUTHORITY)
+//                .appendPath(PATH_ONE)
+//                .appendPath(PATH_TWO)
+//                .appendPath(PATH_THREE)
+//                .appendQueryParameter(QUERY, "")
+//                .appendQueryParameter(QUERY_PARAMETER_TITLE, bookTitle)
+//                .appendQueryParameter(QUERY_PARAMETER_AUTHOR, bookAuthor)
+//                .appendQueryParameter(QUERY_PARAMTER_MAX_RESULTS, MAX_RESULTS_3)
+//                .appendQueryParameter(KEY, API_KEY);
+//        String uriString = builder.build().toString();
+        String baseUrl = "https://www.googleapis.com/books/v1/volumes?q=";
+
+        URLEncoder.encode(bookAuthor, "UTF-8");
+        String titleQuery = QUERY_PARAMETER_TITLE + URLEncoder.encode(bookTitle, "UTF-8");
+        String authorQuery = QUERY_PARAMETER_AUTHOR + URLEncoder.encode(bookAuthor, "UTF-8");
+        String uriString = baseUrl + titleQuery + "+" + authorQuery + "&" + KEY + API_KEY;
+        return uriString;
     }
 }

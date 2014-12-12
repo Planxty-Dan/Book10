@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public class ParseGoogleBooksJson {
     private final String CATEGORIES_KEY = "categories";
     private final String IMAGES_KEY = "imageLinks";
     private final String IMAGE_URL_KEY = "thumbnail";
-    private List<BooksModel> books;
+
     private String jsonResults;
     private JSONObject mainJsonObject;
 
@@ -30,6 +31,7 @@ public class ParseGoogleBooksJson {
     }
 
     public List<BooksModel> parseJson() {
+        List<BooksModel> books = new ArrayList<BooksModel>();
         try {
             mainJsonObject = new JSONObject(jsonResults);
         } catch (JSONException e) {
@@ -47,7 +49,7 @@ public class ParseGoogleBooksJson {
                 String description = volumeInfoObject.getString(DESCRIPTION_KEY);
                 JSONArray categoriesArray = volumeInfoObject.getJSONArray(CATEGORIES_KEY);
                 String genre = getGenres(categoriesArray);
-                JSONObject imageLink = jsonBook.getJSONObject(IMAGES_KEY);
+                JSONObject imageLink = volumeInfoObject.getJSONObject(IMAGES_KEY);
                 String imageURL = imageLink.getString(IMAGE_URL_KEY);
                 BooksModel currentBook = new BooksModel(googleID, title, author, genre, description, imageURL);
                 books.add(currentBook);
