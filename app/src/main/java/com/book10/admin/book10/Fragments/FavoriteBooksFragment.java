@@ -144,28 +144,33 @@ public class FavoriteBooksFragment extends ListFragment{
     public void acceptedFavorites(DialogInterface dialog) {
         favoriteBooks.add(tempBookStorage.get(googleBooksArrayIndex));
         ParseQuery bookAlreadyAddedQuery = ParseQuery.getQuery(BOOK_KEY);
-        bookAlreadyAddedQuery.whereEqualTo("googleID", tempBookStorage.get(0).getGoogleBooksID());
+        bookAlreadyAddedQuery.whereEqualTo("googleID", tempBookStorage.get(googleBooksArrayIndex).getGoogleBooksID());
         bookAlreadyAddedQuery.getFirstInBackground( new GetCallback() {
             @Override
             public void done(ParseObject parseObject, ParseException e) {
                 BooksModel tempBook = favoriteBooks.get(googleBooksArrayIndex);
                 saveFavoritesToParse(parseObject, tempBook);
+                adapter.notifyDataSetChanged();
+                tempBookStorage.clear();
+                googleBooksArrayIndex = 0;
+                if (favoriteBooks.size() < 10) {
+                    enterBooks();
+                } else {
+                    Toast.makeText(getActivity(), R.string.finished_entering_favorites, Toast.LENGTH_LONG).show();
+
+                }
             }
         });
-        adapter.notifyDataSetChanged();
-        tempBookStorage.clear();
-        googleBooksArrayIndex = 0;
-        if (favoriteBooks.size() < 10) {
-            enterBooks();
-        } else {
-            Toast.makeText(getActivity(), R.string.finished_entering_favorites, Toast.LENGTH_LONG).show();
-
-        }
     }
 
     public void declinedFavorites(DialogInterface dialog) {
-        googleBooksArrayIndex++;
-        checkEnteredBook();
+        if (googleBooksArrayIndex < tempBookStorage.size()) {
+            googleBooksArrayIndex++;
+            checkEnteredBook();
+        } else {
+            Toast.makeText(getActivity(), R.string.declined_favorites_confirmation, Toast.LENGTH_SHORT).show();
+            enterBooks();
+        }
         dialog.dismiss();
     }
 
