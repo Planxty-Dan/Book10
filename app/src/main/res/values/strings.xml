@@ -37,6 +37,9 @@
     <string name="declined_favorites_confirmation">Sorry, please enter again.</string>
     <string name="favorite_book_added">This Book has been added to your favorites.</string>
     <string name="finished_entering_favorites">That\'s all 10!  Give us a moment and well get your recommendations.</string>
+    <string name="favorites">Favorites</string>
+    <string name="recommendations">Recommendations</string>
+    <string name="need_title_author_submit_favorites_message">Please enter a title and author for the book</string>
 
 
 </resources>

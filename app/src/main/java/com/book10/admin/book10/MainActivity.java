@@ -1,12 +1,8 @@
 package com.book10.admin.book10;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
-import com.book10.admin.book10.Fragments.RecommendBooksFragment;
-import com.book10.admin.book10.Fragments.UserSignInFragment;
-import com.parse.ParseUser;
-
+import com.book10.admin.book10.Fragments.MainFragment;
 
 public class MainActivity extends Activity {
 
@@ -18,9 +14,9 @@ public class MainActivity extends Activity {
     }
 
     protected void toRecommendedBooksFragment() {
-        RecommendBooksFragment recommendBooksFragment = new RecommendBooksFragment();
+        MainFragment mainFragment = new MainFragment();
         getFragmentManager().beginTransaction()
-                .add(R.id.container, recommendBooksFragment)
+                .add(R.id.container, mainFragment)
                 .commit();
     }
 

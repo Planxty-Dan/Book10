@@ -52,25 +52,6 @@ public class RecommendBooksFragment extends ListFragment{
         super.onListItemClick(l, v, position, id);
     }
 
-    public void sendToFavoriteBooks() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.send_to_favorites_toast)
-                .setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        FavoriteBooksFragment favoriteBooksFragment = new FavoriteBooksFragment();
-                        getFragmentManager().beginTransaction()
-                                .replace(R.id.container, favoriteBooksFragment)
-                                .addToBackStack("recommended books")
-                                .commit();
-                    }
-                });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-
-
     public class BookListAdapter extends ArrayAdapter<BooksModel> {
 
         ArrayList<BooksModel> bookList = new ArrayList<BooksModel>();

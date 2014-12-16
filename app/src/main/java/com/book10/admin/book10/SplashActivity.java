@@ -1,24 +1,19 @@
-package com.book10.admin.book10.NewVersion;
+package com.book10.admin.book10;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-
-import com.book10.admin.book10.Fragments.RecommendBooksFragment;
 import com.book10.admin.book10.Fragments.UserSignInFragment;
 import com.book10.admin.book10.MainActivity;
 import com.book10.admin.book10.Models.BuildBooksFromParseObjects;
 import com.book10.admin.book10.R;
 import com.parse.FindCallback;
-import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
 import java.util.ArrayList;
 import java.util.List;
 
