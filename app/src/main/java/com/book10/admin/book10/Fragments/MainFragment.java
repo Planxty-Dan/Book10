@@ -21,7 +21,7 @@ public class MainFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         favoritesButton = (Button) rootView.findViewById(R.id.main_favorites_button);
-        recommendationsButton = (Button) rootView.findViewById(R.id.main_favorites_button);
+        recommendationsButton = (Button) rootView.findViewById(R.id.main_recommendations_button);
         return rootView;
     }
 

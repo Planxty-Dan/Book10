@@ -2,7 +2,6 @@ package com.book10.admin.book10.Fragments;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.book10.admin.book10.APIcalls.GoogleBooksAPI;
 import com.book10.admin.book10.Models.BooksModel;
+import com.book10.admin.book10.Models.FavoritesSingleton;
 import com.book10.admin.book10.R;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Created by admin on 12/16/14.
  */
-public class EnterFavoriteBooks extends Fragment{
+public class EnterFavoriteBooksFragment extends Fragment{
 
     private final String FAVORITES_KEY = "UserFavorites";
     private final String BOOK_KEY = "Book";
@@ -43,15 +43,18 @@ public class EnterFavoriteBooks extends Fragment{
     private GoogleBooksAPI googleBooksAPI;
     private BooksModel tempBook;
     private ParseObject bookObject;
+    private FavoritesSingleton favoritesSingleton;
 
-    public static EnterFavoriteBooks newInstance() {
-        EnterFavoriteBooks enterFavoriteBooks = new EnterFavoriteBooks();
+    public static EnterFavoriteBooksFragment newInstance() {
+        EnterFavoriteBooksFragment enterFavoriteBooks = new EnterFavoriteBooksFragment();
         return enterFavoriteBooks;
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        favoritesSingleton = FavoritesSingleton.getInstance();
         View rootView = View.inflate(getActivity(), R.layout.fragment_enter_favorite_book_form, null);
         enterTitle = (EditText) rootView.findViewById(R.id.enter_title);
         enterAuthor = (EditText) rootView.findViewById(R.id.enter_author);
@@ -80,6 +83,8 @@ public class EnterFavoriteBooks extends Fragment{
         googleBooksAPI = new GoogleBooksAPI(getActivity(), userEnteredTitle, userEnteredAuthor, new GoogleBooksAPI.OnGoogleBooksDataLoadedListener() {
             @Override
             public void dataLoaded(List<BooksModel> books) {
+                tempBookStorage.clear();
+                googleBooksArrayIndex = 0;
                 tempBookStorage = (ArrayList<BooksModel>) books;
                 checkEnteredBook();
             }
@@ -107,21 +112,20 @@ public class EnterFavoriteBooks extends Fragment{
                 declinedFavorites(dialog);
             }
         });
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        AlertDialog dialog = builder.create();
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 tempBookStorage.clear();
                 googleBooksArrayIndex = 0;
             }
         });
-        AlertDialog dialog = builder.create();
         dialog.show();
-
     }
 
     private void acceptedFavorites(DialogInterface dialog) {
         tempBook = tempBookStorage.get(googleBooksArrayIndex);
-        favoriteBooksFragment.addBookToFavorites(tempBook);
+        favoritesSingleton.addToFavoritesList(tempBook);
         ParseQuery bookAlreadyAddedQuery = ParseQuery.getQuery(BOOK_KEY);
         bookAlreadyAddedQuery.whereEqualTo("googleID", tempBook.getGoogleBooksID());
         bookAlreadyAddedQuery.getFirstInBackground( new GetCallback() {
@@ -130,8 +134,10 @@ public class EnterFavoriteBooks extends Fragment{
                 saveFavoritesToParse(parseObject, tempBook);
                 tempBookStorage.clear();
                 googleBooksArrayIndex = 0;
+                getFragmentManager().popBackStack();
             }
         });
+
     }
 
     private void declinedFavorites(DialogInterface dialog) {

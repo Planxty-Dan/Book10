@@ -22,7 +22,7 @@ public class ParseGoogleBooksJson {
     private final String CATEGORIES_KEY = "categories";
     private final String IMAGES_KEY = "imageLinks";
     private final String IMAGE_URL_KEY = "thumbnail";
-
+    private final String NOT_AVAILABLE = "not available";
     private String jsonResults;
     private JSONObject mainJsonObject;
 
@@ -46,11 +46,27 @@ public class ParseGoogleBooksJson {
                 String title = volumeInfoObject.getString(TITLE_KEY);
                 JSONArray authorsArray = volumeInfoObject.getJSONArray(AUTHORS_KEY);
                 String author = getAuthors(authorsArray);
-                String description = volumeInfoObject.getString(DESCRIPTION_KEY);
-                JSONArray categoriesArray = volumeInfoObject.getJSONArray(CATEGORIES_KEY);
-                String genre = getGenres(categoriesArray);
-                JSONObject imageLink = volumeInfoObject.getJSONObject(IMAGES_KEY);
-                String imageURL = imageLink.getString(IMAGE_URL_KEY);
+                String description;
+                if (checkIfExists(volumeInfoObject, DESCRIPTION_KEY)) {
+                    description = volumeInfoObject.getString(DESCRIPTION_KEY);
+                } else {
+                    description = NOT_AVAILABLE;
+                }
+                JSONArray categoriesArray;
+                String genre;
+                if (checkIfExists(volumeInfoObject, CATEGORIES_KEY)) {
+                    categoriesArray = volumeInfoObject.getJSONArray(CATEGORIES_KEY);
+                    genre = getGenres(categoriesArray);
+                } else {
+                    genre = NOT_AVAILABLE;
+                }
+                String imageURL;
+                if (checkIfExists(volumeInfoObject, IMAGES_KEY)) {
+                    JSONObject imageLink = volumeInfoObject.getJSONObject(IMAGES_KEY);
+                    imageURL = imageLink.getString(IMAGE_URL_KEY);
+                } else {
+                    imageURL = null;
+                }
                 BooksModel currentBook = new BooksModel(googleID, title, author, genre, description, imageURL);
                 books.add(currentBook);
             }
@@ -94,5 +110,15 @@ public class ParseGoogleBooksJson {
             e.printStackTrace();
         }
         return genre;
+    }
+
+    private Boolean checkIfExists(JSONObject volumeInfoObject, String key) {
+        try {
+            volumeInfoObject.has(key);
+            volumeInfoObject.optJSONArray
+            return true;
+        } catch (JSONException e) {
+            return false;
+        }
     }
 }

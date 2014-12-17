@@ -1,6 +1,4 @@
-package com.book10.admin.book10.Fragments;
-
-import com.book10.admin.book10.Models.BooksModel;
+package com.book10.admin.book10.Models;
 
 import java.util.ArrayList;
 
@@ -11,6 +9,13 @@ public class FavoritesSingleton {
 
     private static FavoritesSingleton instance;
     private static ArrayList<BooksModel> favoritesList;
+
+    public static FavoritesSingleton getInstance() {
+        if (instance == null) {
+            instance = new FavoritesSingleton();
+        }
+        return instance;
+    }
 
     private FavoritesSingleton() {}
 
@@ -28,12 +33,5 @@ public class FavoritesSingleton {
 
     public void removeFromFavoritesList(int index) {
         favoritesList.remove(index);
-    }
-
-    public static FavoritesSingleton getInstance() {
-        if (instance == null) {
-            instance = new FavoritesSingleton();
-        }
-        return instance;
     }
 }

@@ -108,18 +108,6 @@ public class GoogleBooksAPI extends AsyncTask {
     }
 
     private String buildURI() throws UnsupportedEncodingException {
-//        Uri.Builder builder = new Uri.Builder();
-//        builder.scheme(SCHEME)
-//                .authority(AUTHORITY)
-//                .appendPath(PATH_ONE)
-//                .appendPath(PATH_TWO)
-//                .appendPath(PATH_THREE)
-//                .appendQueryParameter(QUERY, "")
-//                .appendQueryParameter(QUERY_PARAMETER_TITLE, bookTitle)
-//                .appendQueryParameter(QUERY_PARAMETER_AUTHOR, bookAuthor)
-//                .appendQueryParameter(QUERY_PARAMTER_MAX_RESULTS, MAX_RESULTS_3)
-//                .appendQueryParameter(KEY, API_KEY);
-//        String uriString = builder.build().toString();
         String baseUrl = "https://www.googleapis.com/books/v1/volumes?q=";
 
         URLEncoder.encode(bookAuthor, "UTF-8");

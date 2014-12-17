@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.book10.admin.book10.Models.BooksModel;
 import com.book10.admin.book10.R;
 import com.parse.ParseObject;
@@ -45,7 +47,7 @@ public class RecommendBooksFragment extends ListFragment{
         final BookListAdapter adapter = new BookListAdapter(getActivity(), recommendedBooks);
 
         if (recommendedBooks.size() == 0) {
-            sendToFavoriteBooks();
+            Toast.makeText(getActivity(), R.string.no_recommendations, Toast.LENGTH_SHORT).show();
         }
         setListAdapter(adapter);
         //get list

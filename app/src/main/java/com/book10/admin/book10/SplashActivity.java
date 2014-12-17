@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import com.book10.admin.book10.Fragments.UserSignInFragment;
-import com.book10.admin.book10.MainActivity;
+import com.book10.admin.book10.Models.BooksModel;
 import com.book10.admin.book10.Models.BuildBooksFromParseObjects;
-import com.book10.admin.book10.R;
+import com.book10.admin.book10.Models.FavoritesSingleton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -24,11 +24,14 @@ public class SplashActivity extends Activity {
 
     private ArrayList<ParseObject> recommendations;
     private ArrayList<ParseObject> favorites;
+    private ArrayList<BooksModel> favoriteBooks;
+    private FavoritesSingleton favoritesSingleton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        favoritesSingleton = FavoritesSingleton.getInstance();
         checkLogin();
     }
 
@@ -49,20 +52,30 @@ public class SplashActivity extends Activity {
                 .commit();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkLogin();
+    }
+
     private void checkFavorites(ParseUser currentUser) {
-        final ParseQuery<ParseObject> favoritesQuery = ParseQuery.getQuery("userFavorites");
+        final ParseQuery<ParseObject> favoritesQuery = ParseQuery.getQuery("UserFavorites");
         favoritesQuery.whereEqualTo("user", currentUser);
+        favoritesQuery.include("book");
         favoritesQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
                     if (parseObjects == null || parseObjects.size() == 0) {
+                        favoriteBooks = new ArrayList<BooksModel>();
+                        favoritesSingleton.setFavoritesList(favoriteBooks);
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                     } else {
                         favorites = (ArrayList<ParseObject>) parseObjects;
                         BuildBooksFromParseObjects buildBooks = new BuildBooksFromParseObjects();
-                        buildBooks.favoriteBooks(favorites);
+                        favoriteBooks = buildBooks.build(favorites);
+                        favoritesSingleton.setFavoritesList(favoriteBooks);
                         checkRecommendations(buildBooks);
                     }
                 } else {
@@ -85,7 +98,7 @@ public class SplashActivity extends Activity {
                         startActivity(intent);
                     } else {
                         recommendations = (ArrayList<ParseObject>) parseObjects;
-                        buildBooks.recommendedBooks(recommendations);
+                        buildBooks.build(recommendations);
                     }
                 } else {
                     Log.d("Error", e.getMessage());

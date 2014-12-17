@@ -17,8 +17,7 @@
     <string name="new_user_email_match_error">Sorry, your email address does not match the confirmation email address.</string>
     <string name="new_user_email_already_registered">This email address is already registered, login with that email or enter a different one.</string>
     <string name="by">By: </string>
-    <string name="send_to_favorites_toast">For Book10 make recommendations we require you to enter your 10 favorite books.
-        It might take a few minutes but you\'ll only have to do it once.</string>
+    <string name="no_recommendations">No recommendations, please enter books into your favorites list..</string>
     <string name="ok_button">Ok</string>
     <string name="no_favorites_entered_dialog">Enter your ten favorites books,
         as you enter each one we will check to make sure the correct book was found and then add it to your list.
