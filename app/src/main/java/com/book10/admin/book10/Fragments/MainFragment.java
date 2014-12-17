@@ -30,7 +30,7 @@ public class MainFragment extends Fragment{
         favoritesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FavoriteBooksFragment favoriteBooksFragment = new FavoriteBooksFragment();
+                FavoriteBooksFragment favoriteBooksFragment = FavoriteBooksFragment.newInstance();
                 getFragmentManager().beginTransaction()
                         .replace(R.id.container, favoriteBooksFragment)
                         .addToBackStack("main")
@@ -40,7 +40,7 @@ public class MainFragment extends Fragment{
         recommendationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecommendBooksFragment recommendBooksFragment = new RecommendBooksFragment();
+                RecommendBooksFragment recommendBooksFragment = RecommendBooksFragment.newInstance();
                 getFragmentManager().beginTransaction()
                         .replace(R.id.container, recommendBooksFragment)
                         .addToBackStack("main")

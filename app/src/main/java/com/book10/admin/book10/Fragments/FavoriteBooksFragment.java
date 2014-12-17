@@ -35,20 +35,24 @@ import java.util.zip.Inflater;
 public class FavoriteBooksFragment extends ListFragment{
 
     private BookListAdapter adapter;
-    public ArrayList<BooksModel> favoriteBooks = new ArrayList<BooksModel>();
+    public ArrayList<BooksModel> favoriteBooks;
     private TextView bookTitle;
     private TextView bookAuthor;
     private Button deleteButton;
-    private ParseObject bookObject;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        FavoritesSingleton favoritesSingleton = FavoritesSingleton.getInstance();
+        favoriteBooks = favoritesSingleton.getFavoritesList();
         adapter = new BookListAdapter(getActivity());
         numberOfFavoritesEnteredChecker();
         setListAdapter(adapter);
+    }
 
-
+    public static FavoriteBooksFragment newInstance() {
+        FavoriteBooksFragment favoriteBooksFragment = new FavoriteBooksFragment();
+        return favoriteBooksFragment;
     }
 
     @Override
@@ -56,12 +60,9 @@ public class FavoriteBooksFragment extends ListFragment{
         super.onListItemClick(l, v, position, id);
     }
 
-    public void addBookToFavorites(BooksModel favBook) {
-        favoriteBooks.add(favBook);
-    }
-
-    public int getFavoriteBooksCount() {
-        return favoriteBooks.size();
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     private void numberOfFavoritesEnteredChecker() {
@@ -87,7 +88,7 @@ public class FavoriteBooksFragment extends ListFragment{
     }
 
     private void goToEnterFavoriteBooks() {
-        EnterFavoriteBooks enterFavoriteBooks = new EnterFavoriteBooks(this);
+        EnterFavoriteBooks enterFavoriteBooks = EnterFavoriteBooks.newInstance();
         getFragmentManager().beginTransaction()
                 .replace(R.id.container, enterFavoriteBooks)
                 .addToBackStack("enter favorite")
@@ -113,7 +114,7 @@ public class FavoriteBooksFragment extends ListFragment{
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    favoriteBooks.remove(position);
+                    favoriteBooks.remove(position)
                     adapter.notifyDataSetChanged();
                 }
             });

@@ -41,11 +41,14 @@ public class EnterFavoriteBooks extends Fragment{
     private int googleBooksArrayIndex = 0;
     private ArrayList<BooksModel> tempBookStorage = new ArrayList<BooksModel>();
     private GoogleBooksAPI googleBooksAPI;
-    private FavoriteBooksFragment favoriteBooksFragment;
+    private BooksModel tempBook;
+    private ParseObject bookObject;
 
-    public EnterFavoriteBooks(FavoriteBooksFragment favoriteBooksFragment) {
-        this.favoriteBooksFragment = favoriteBooksFragment;
+    public static EnterFavoriteBooks newInstance() {
+        EnterFavoriteBooks enterFavoriteBooks = new EnterFavoriteBooks();
+        return enterFavoriteBooks;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -104,29 +107,29 @@ public class EnterFavoriteBooks extends Fragment{
                 declinedFavorites(dialog);
             }
         });
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                tempBookStorage.clear();
+                googleBooksArrayIndex = 0;
+            }
+        });
         AlertDialog dialog = builder.create();
         dialog.show();
 
     }
 
     private void acceptedFavorites(DialogInterface dialog) {
-        favoriteBooks.add(tempBookStorage.get(googleBooksArrayIndex));
+        tempBook = tempBookStorage.get(googleBooksArrayIndex);
+        favoriteBooksFragment.addBookToFavorites(tempBook);
         ParseQuery bookAlreadyAddedQuery = ParseQuery.getQuery(BOOK_KEY);
-        bookAlreadyAddedQuery.whereEqualTo("googleID", tempBookStorage.get(googleBooksArrayIndex).getGoogleBooksID());
+        bookAlreadyAddedQuery.whereEqualTo("googleID", tempBook.getGoogleBooksID());
         bookAlreadyAddedQuery.getFirstInBackground( new GetCallback() {
             @Override
             public void done(ParseObject parseObject, ParseException e) {
-                BooksModel tempBook = favoriteBooks.get(googleBooksArrayIndex);
                 saveFavoritesToParse(parseObject, tempBook);
-                adapter.notifyDataSetChanged();
                 tempBookStorage.clear();
                 googleBooksArrayIndex = 0;
-                if (favoriteBooks.size() < 10) {
-                    enterBooks();
-                } else {
-                    Toast.makeText(getActivity(), R.string.finished_entering_favorites, Toast.LENGTH_LONG).show();
-
-                }
             }
         });
     }
@@ -137,7 +140,6 @@ public class EnterFavoriteBooks extends Fragment{
             checkEnteredBook();
         } else {
             Toast.makeText(getActivity(), R.string.declined_favorites_confirmation, Toast.LENGTH_SHORT).show();
-            enterBooks();
         }
         dialog.dismiss();
     }

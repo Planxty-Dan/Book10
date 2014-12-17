@@ -33,6 +33,11 @@ public class RecommendBooksFragment extends ListFragment{
     private ArrayList<BooksModel> recommendedBooks = new ArrayList<BooksModel>();
 
 
+    public static RecommendBooksFragment newInstance() {
+        RecommendBooksFragment recommendBooksFragment = new RecommendBooksFragment();
+        return recommendBooksFragment;
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
