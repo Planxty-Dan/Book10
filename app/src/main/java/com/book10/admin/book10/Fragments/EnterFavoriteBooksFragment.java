@@ -85,8 +85,12 @@ public class EnterFavoriteBooksFragment extends Fragment{
             public void dataLoaded(List<BooksModel> books) {
                 tempBookStorage.clear();
                 googleBooksArrayIndex = 0;
-                tempBookStorage = (ArrayList<BooksModel>) books;
-                checkEnteredBook();
+                if (books.size() == 0) {
+                    Toast.makeText(getActivity(), R.string.no_results, Toast.LENGTH_SHORT).show();
+                } else {
+                    tempBookStorage = (ArrayList<BooksModel>) books;
+                    checkEnteredBook();
+                }
             }
         });
         googleBooksAPI.execute();

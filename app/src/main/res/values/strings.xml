@@ -39,6 +39,6 @@
     <string name="favorites">Favorites</string>
     <string name="recommendations">Recommendations</string>
     <string name="need_title_author_submit_favorites_message">Please enter a title and author for the book</string>
-
+    <string name="no_results">No results, please check your spelling and try again</string>
 
 </resources>

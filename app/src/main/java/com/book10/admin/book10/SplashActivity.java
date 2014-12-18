@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import com.book10.admin.book10.Fragments.UserSignInFragment;
 import com.book10.admin.book10.Models.BooksModel;
-import com.book10.admin.book10.Models.BuildBooksFromParseObjects;
+import com.book10.admin.book10.Utilities.BuildBooksFromParseObjects;
 import com.book10.admin.book10.Models.FavoritesSingleton;
 import com.parse.FindCallback;
 import com.parse.ParseException;

@@ -46,27 +46,18 @@ public class ParseGoogleBooksJson {
                 String title = volumeInfoObject.getString(TITLE_KEY);
                 JSONArray authorsArray = volumeInfoObject.getJSONArray(AUTHORS_KEY);
                 String author = getAuthors(authorsArray);
-                String description;
-                if (checkIfExists(volumeInfoObject, DESCRIPTION_KEY)) {
-                    description = volumeInfoObject.getString(DESCRIPTION_KEY);
-                } else {
-                    description = NOT_AVAILABLE;
-                }
-                JSONArray categoriesArray;
+                String description = volumeInfoObject.optString(DESCRIPTION_KEY);
+                setNullStringMessage(description);
+                JSONArray categoriesArray = volumeInfoObject.optJSONArray(CATEGORIES_KEY);
                 String genre;
-                if (checkIfExists(volumeInfoObject, CATEGORIES_KEY)) {
-                    categoriesArray = volumeInfoObject.getJSONArray(CATEGORIES_KEY);
+                if (checkForNull(categoriesArray) == false) {
                     genre = getGenres(categoriesArray);
                 } else {
                     genre = NOT_AVAILABLE;
                 }
-                String imageURL;
-                if (checkIfExists(volumeInfoObject, IMAGES_KEY)) {
-                    JSONObject imageLink = volumeInfoObject.getJSONObject(IMAGES_KEY);
-                    imageURL = imageLink.getString(IMAGE_URL_KEY);
-                } else {
-                    imageURL = null;
-                }
+                JSONObject imageLink = volumeInfoObject.optJSONObject(IMAGES_KEY);
+                String imageURL = imageLink.optString(IMAGE_URL_KEY);
+                setNullStringMessage(imageURL);
                 BooksModel currentBook = new BooksModel(googleID, title, author, genre, description, imageURL);
                 books.add(currentBook);
             }
@@ -112,13 +103,20 @@ public class ParseGoogleBooksJson {
         return genre;
     }
 
-    private Boolean checkIfExists(JSONObject volumeInfoObject, String key) {
-        try {
-            volumeInfoObject.has(key);
-            volumeInfoObject.optJSONArray
-            return true;
-        } catch (JSONException e) {
-            return false;
+    private Boolean checkForNull(JSONArray jsonArray) {
+         if (jsonArray == null) {
+             return true;
+         } else {
+             return false;
+         }
+    }
+
+    private String setNullStringMessage(String string) {
+        if (string == null) {
+            string = NOT_AVAILABLE;
+            return string;
+        } else {
+            return string;
         }
     }
 }

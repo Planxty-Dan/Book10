@@ -16,14 +16,22 @@ import android.widget.TextView;
 import com.book10.admin.book10.Models.BooksModel;
 import com.book10.admin.book10.Models.FavoritesSingleton;
 import com.book10.admin.book10.R;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by admin on 12/6/14.
  */
-public class FavoriteBooksFragment extends ListFragment{
+public class FavoriteBooksFragment extends ListFragment {
 
+    private final String FAVORITES_PARSE_KEY = "UserFavorites";
     private BookListAdapter adapter;
     public ArrayList<BooksModel> favoriteBooks;
     private TextView bookTitle;
@@ -117,6 +125,8 @@ public class FavoriteBooksFragment extends ListFragment{
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String id = favoriteBooks.get(position).getGoogleBooksID();
+                    removeFavoriteFromParse(id);
                     favoriteBooks.remove(position);
                     favoritesSingleton.removeFromFavoritesList(position);
                     adapter.notifyDataSetChanged();
@@ -124,5 +134,20 @@ public class FavoriteBooksFragment extends ListFragment{
             });
             return rowView;
         }
+
+        private void removeFavoriteFromParse(String googleID) {
+            ParseQuery findBookToRemove = new ParseQuery("Book");
+            findBookToRemove.whereEqualTo("googleID", googleID);
+            ParseQuery favoriteToRemove = new ParseQuery(FAVORITES_PARSE_KEY);
+            favoriteToRemove.whereEqualTo("user", ParseUser.getCurrentUser());
+            favoriteToRemove.whereMatchesQuery("book", findBookToRemove);
+            favoriteToRemove.getFirstInBackground(new GetCallback() {
+                @Override
+                public void done(ParseObject parseObject, ParseException e) {
+                    parseObject.deleteInBackground();
+                }
+            });
+        }
     }
 }
+

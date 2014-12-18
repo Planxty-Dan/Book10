@@ -97,14 +97,17 @@ public class GoogleBooksAPI extends AsyncTask {
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
         progressDialog.dismiss();
+        List<BooksModel> googleBooksResults;
         if (searchResult == null) {
-            Log.v("NULL TAG", "null search results in googleAPI post ex");
+            googleBooksResults = new ArrayList<BooksModel>();
+            onDataLoadedListener.dataLoaded(googleBooksResults);
         }
         else {
             ParseGoogleBooksJson jsonData = new ParseGoogleBooksJson(searchResult);
-            List<BooksModel> googleBooksResults = jsonData.parseJson();
+            googleBooksResults = jsonData.parseJson();
             onDataLoadedListener.dataLoaded(googleBooksResults);
         }
+        onDataLoadedListener.dataLoaded(googleBooksResults);
     }
 
     private String buildURI() throws UnsupportedEncodingException {
