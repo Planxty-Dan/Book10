@@ -109,7 +109,7 @@ public class FavoriteBooksFragment extends ListFragment {
     public class BookListAdapter extends ArrayAdapter<BooksModel> {
 
         public BookListAdapter(Context context, ArrayList<BooksModel> favoritesList) {
-            super(context, android.R.layout.simple_list_item_1, favoritesList);
+            super(context, 0, favoritesList);
         }
 
         @Override
@@ -122,13 +122,14 @@ public class FavoriteBooksFragment extends ListFragment {
             BooksModel currentBook = getItem(position);
             bookTitle.setText(currentBook.getBookTitle());
             bookAuthor.setText(currentBook.getBookAuthor());
+            deleteButton.setTag(currentBook);
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String id = favoriteBooks.get(position).getGoogleBooksID();
+                    BooksModel bookToRemove = (BooksModel)v.getTag();
+                    String id = bookToRemove.getGoogleBooksID();
                     removeFavoriteFromParse(id);
-                    favoriteBooks.remove(position);
-                    favoritesSingleton.removeFromFavoritesList(position);
+                    remove(bookToRemove);
                     adapter.notifyDataSetChanged();
                 }
             });

@@ -56,7 +56,12 @@ public class ParseGoogleBooksJson {
                     genre = NOT_AVAILABLE;
                 }
                 JSONObject imageLink = volumeInfoObject.optJSONObject(IMAGES_KEY);
-                String imageURL = imageLink.optString(IMAGE_URL_KEY);
+                String imageURL;
+                if (imageLink == null) {
+                    imageURL = NOT_AVAILABLE;
+                } else {
+                    imageURL = imageLink.optString(IMAGE_URL_KEY);
+                }
                 setNullStringMessage(imageURL);
                 BooksModel currentBook = new BooksModel(googleID, title, author, genre, description, imageURL);
                 books.add(currentBook);

@@ -73,6 +73,8 @@ public class EnterFavoriteBooksFragment extends Fragment{
                 if (userEnteredTitle.length() == 0 || userEnteredAuthor.length() == 0) {
                     Toast.makeText(getActivity(), R.string.need_title_author_submit_favorites_message, Toast.LENGTH_SHORT).show();
                 } else {
+                    tempBookStorage.clear();
+                    googleBooksArrayIndex = 0;
                     getBooksFromGoogleAPI();
                 }
             }
@@ -83,8 +85,6 @@ public class EnterFavoriteBooksFragment extends Fragment{
         googleBooksAPI = new GoogleBooksAPI(getActivity(), userEnteredTitle, userEnteredAuthor, new GoogleBooksAPI.OnGoogleBooksDataLoadedListener() {
             @Override
             public void dataLoaded(List<BooksModel> books) {
-                tempBookStorage.clear();
-                googleBooksArrayIndex = 0;
                 if (books.size() == 0) {
                     Toast.makeText(getActivity(), R.string.no_results, Toast.LENGTH_SHORT).show();
                 } else {
@@ -107,7 +107,8 @@ public class EnterFavoriteBooksFragment extends Fragment{
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                acceptedFavorites(dialog);
+                dialog.dismiss();
+                acceptedFavorites();
             }
         });
         builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -117,17 +118,10 @@ public class EnterFavoriteBooksFragment extends Fragment{
             }
         });
         AlertDialog dialog = builder.create();
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                tempBookStorage.clear();
-                googleBooksArrayIndex = 0;
-            }
-        });
         dialog.show();
     }
 
-    private void acceptedFavorites(DialogInterface dialog) {
+    private void acceptedFavorites() {
         tempBook = tempBookStorage.get(googleBooksArrayIndex);
         favoritesSingleton.addToFavoritesList(tempBook);
         ParseQuery bookAlreadyAddedQuery = ParseQuery.getQuery(BOOK_KEY);
@@ -136,8 +130,6 @@ public class EnterFavoriteBooksFragment extends Fragment{
             @Override
             public void done(ParseObject parseObject, ParseException e) {
                 saveFavoritesToParse(parseObject, tempBook);
-                tempBookStorage.clear();
-                googleBooksArrayIndex = 0;
                 getFragmentManager().popBackStack();
             }
         });
@@ -145,7 +137,7 @@ public class EnterFavoriteBooksFragment extends Fragment{
     }
 
     private void declinedFavorites(DialogInterface dialog) {
-        if (googleBooksArrayIndex < tempBookStorage.size()) {
+        if (googleBooksArrayIndex < (tempBookStorage.size() - 1)) {
             googleBooksArrayIndex++;
             checkEnteredBook();
         } else {

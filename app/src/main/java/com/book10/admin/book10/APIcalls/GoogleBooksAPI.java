@@ -100,12 +100,10 @@ public class GoogleBooksAPI extends AsyncTask {
         List<BooksModel> googleBooksResults;
         if (searchResult == null) {
             googleBooksResults = new ArrayList<BooksModel>();
-            onDataLoadedListener.dataLoaded(googleBooksResults);
         }
         else {
             ParseGoogleBooksJson jsonData = new ParseGoogleBooksJson(searchResult);
             googleBooksResults = jsonData.parseJson();
-            onDataLoadedListener.dataLoaded(googleBooksResults);
         }
         onDataLoadedListener.dataLoaded(googleBooksResults);
     }
