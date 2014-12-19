@@ -113,7 +113,8 @@ public class FavoriteBooksFragment extends ListFragment {
         }
 
         @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final int pos = position;
             View rowView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_main_list_item, parent, false);
             bookTitle = (TextView) rowView.findViewById(R.id.book_title);
             bookAuthor = (TextView) rowView.findViewById(R.id.book_author);
@@ -130,6 +131,7 @@ public class FavoriteBooksFragment extends ListFragment {
                     String id = bookToRemove.getGoogleBooksID();
                     removeFavoriteFromParse(id);
                     remove(bookToRemove);
+                    favoritesSingleton.removeFromFavoritesList(pos);
                     adapter.notifyDataSetChanged();
                 }
             });

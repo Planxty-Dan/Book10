@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import com.book10.admin.book10.Fragments.UserSignInFragment;
 import com.book10.admin.book10.Models.BooksModel;
+import com.book10.admin.book10.Models.RecommendedSingleton;
 import com.book10.admin.book10.Utilities.BuildBooksFromParseObjects;
 import com.book10.admin.book10.Models.FavoritesSingleton;
 import com.parse.FindCallback;
@@ -25,7 +26,10 @@ public class SplashActivity extends Activity {
     private ArrayList<ParseObject> recommendations;
     private ArrayList<ParseObject> favorites;
     private ArrayList<BooksModel> favoriteBooks;
+    private ArrayList<BooksModel> recommendedBooks;
     private FavoritesSingleton favoritesSingleton;
+    private RecommendedSingleton recommendedSingleton;
+    private BuildBooksFromParseObjects buildBooks = new BuildBooksFromParseObjects();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +62,11 @@ public class SplashActivity extends Activity {
         checkLogin();
     }
 
+    @Override
+    protected void onStop() {
+        finish();
+    }
+
     private void checkFavorites(ParseUser currentUser) {
         final ParseQuery<ParseObject> favoritesQuery = ParseQuery.getQuery("UserFavorites");
         favoritesQuery.whereEqualTo("user", currentUser);
@@ -69,14 +78,12 @@ public class SplashActivity extends Activity {
                     if (parseObjects == null || parseObjects.size() == 0) {
                         favoriteBooks = new ArrayList<BooksModel>();
                         favoritesSingleton.setFavoritesList(favoriteBooks);
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
+                        startMainActivity();
                     } else {
                         favorites = (ArrayList<ParseObject>) parseObjects;
-                        BuildBooksFromParseObjects buildBooks = new BuildBooksFromParseObjects();
                         favoriteBooks = buildBooks.build(favorites);
                         favoritesSingleton.setFavoritesList(favoriteBooks);
-                        checkRecommendations(buildBooks);
+                        checkRecommendations();
                     }
                 } else {
                     Log.d("Error", e.getMessage());
@@ -86,7 +93,7 @@ public class SplashActivity extends Activity {
 
     }
 
-    private void checkRecommendations(final BuildBooksFromParseObjects buildBooks) {
+    private void checkRecommendations() {
         ParseQuery<ParseObject> recomendationsQuery = ParseQuery.getQuery("recommendations");
         recomendationsQuery.whereEqualTo("user", ParseUser.getCurrentUser());
         recomendationsQuery.findInBackground(new FindCallback<ParseObject>() {
@@ -94,16 +101,24 @@ public class SplashActivity extends Activity {
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
                     if (parseObjects == null || parseObjects.size() == 0) {
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
+                        recommendedBooks = new ArrayList<BooksModel>();
+                        recommendedSingleton.setRecommendedList(recommendedBooks);
+                        startMainActivity();
                     } else {
                         recommendations = (ArrayList<ParseObject>) parseObjects;
-                        buildBooks.build(recommendations);
+                        recommendedBooks = buildBooks.build(recommendations);
+                        recommendedSingleton.setRecommendedList(recommendedBooks);
+                        startMainActivity();
                     }
                 } else {
                     Log.d("Error", e.getMessage());
                 }
             }
         });
+    }
+
+    private void startMainActivity() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 }
