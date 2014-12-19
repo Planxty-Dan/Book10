@@ -49,7 +49,7 @@ public class SplashActivity extends Activity {
     }
 
     protected void userSignIn() {
-        UserSignInFragment signInFragment = new UserSignInFragment();
+        UserSignInFragment signInFragment = UserSignInFragment.newInstance();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.container, signInFragment)
                 .addToBackStack("main")

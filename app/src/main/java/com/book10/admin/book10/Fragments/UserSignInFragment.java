@@ -28,6 +28,10 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
     private Button submitEmail;
     private Button newUser;
 
+    public static UserSignInFragment newInstance() {
+        UserSignInFragment userSignInFragment = new UserSignInFragment();
+        return userSignInFragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

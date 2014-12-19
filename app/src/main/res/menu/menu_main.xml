@@ -5,4 +5,8 @@
           android:title="@string/action_settings"
           android:orderInCategory="100"
           android:showAsAction="never"/>
+    <item android:id="@+id/log_out"
+          android:title="Log Out"
+          android:icon="@android:drawable/ic_input_delete"
+          android:showAsAction="always"/>
 </menu>

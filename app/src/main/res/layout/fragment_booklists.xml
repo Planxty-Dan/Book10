@@ -6,15 +6,14 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/add_book_button">
+        android:layout_above="@+id/list_button">
 
         </ListView>
 
     <Button
-        android:id="@+id/add_book_button"
+        android:id="@+id/list_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="XXX"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:layout_marginRight="60dp"/>

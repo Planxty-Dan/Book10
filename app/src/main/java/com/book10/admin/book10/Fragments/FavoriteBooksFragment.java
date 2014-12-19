@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.book10.admin.book10.Models.BooksModel;
 import com.book10.admin.book10.Models.FavoritesSingleton;
 import com.book10.admin.book10.R;
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -24,7 +23,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by admin on 12/6/14.
@@ -47,8 +45,8 @@ public class FavoriteBooksFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_favorite_books, container, false);
-        addBook = (Button) rootView.findViewById(R.id.add_book_button);
+        View rootView = inflater.inflate(R.layout.fragment_booklists, container, false);
+        addBook = (Button) rootView.findViewById(R.id.list_button);
         return rootView;
     }
 
@@ -60,6 +58,7 @@ public class FavoriteBooksFragment extends ListFragment {
         adapter = new BookListAdapter(getActivity(), favoriteBooks);
         numberOfFavoritesEnteredChecker();
         setListAdapter(adapter);
+        addBook.setText(R.string.add_book_button);
         addBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
