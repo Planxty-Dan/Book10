@@ -1,9 +1,7 @@
 package com.book10.admin.book10.Fragments;
 
-import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.book10.admin.book10.Models.BooksModel;
+import com.book10.admin.book10.Models.RecommendedSingleton;
 import com.book10.admin.book10.R;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
+import com.book10.admin.book10.Utilities.UpdateRecommendedBooks;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by admin on 12/2/14.
@@ -32,7 +28,10 @@ public class RecommendBooksFragment extends ListFragment{
     private TextView bookTitle;
     private TextView bookAuthor;
     private Button deleteButton;
-    private ArrayList<BooksModel> recommendedBooks = new ArrayList<BooksModel>();
+    private Button updateButton;
+    private ArrayList<BooksModel> recommendedBooks;
+    private ArrayList<BooksModel> backUpRecommendations;
+    private RecommendedSingleton recommendedSingleton;
 
 
     public static RecommendBooksFragment newInstance() {
@@ -41,17 +40,29 @@ public class RecommendBooksFragment extends ListFragment{
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_booklists, container, false);
+        updateButton = (Button) rootView.findViewById(R.id.list_button);
+        return rootView;
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //recommendedbooks = get recommended books from localdatastore
+        setListFromSingleton();
         final BookListAdapter adapter = new BookListAdapter(getActivity(), recommendedBooks);
-
         if (recommendedBooks.size() == 0) {
             Toast.makeText(getActivity(), R.string.no_recommendations, Toast.LENGTH_SHORT).show();
         }
+        updateButton.setText(R.string.update_recommended_list_button);
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UpdateRecommendedBooks updateRecommendedBooks = new UpdateRecommendedBooks();
+                updateRecommendedBooks.getRecommendations();
+            }
+        });
         setListAdapter(adapter);
-        //get list
-        //set an dataLoaded interface for adapter
     }
 
     @Override
@@ -59,17 +70,21 @@ public class RecommendBooksFragment extends ListFragment{
         super.onListItemClick(l, v, position, id);
     }
 
+    public void setListFromSingleton() {
+        recommendedSingleton = RecommendedSingleton.getInstance();
+        recommendedBooks = (ArrayList<BooksModel>) recommendedSingleton.getRecommendedList().subList(0, 10);
+        backUpRecommendations = (ArrayList<BooksModel>) recommendedSingleton.getRecommendedList().subList(10, 20);
+    }
+
     public class BookListAdapter extends ArrayAdapter<BooksModel> {
 
-        ArrayList<BooksModel> bookList = new ArrayList<BooksModel>();
-
-        public BookListAdapter(Context context, ArrayList<BooksModel> bookList) {
-            super(context, android.R.layout.simple_list_item_1);
-            this.bookList = bookList;
+        public BookListAdapter(Context context, ArrayList<BooksModel> recommendedList) {
+            super(context, 0, recommendedList);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            final int pos = position;
             View rowView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_main_list_item, parent, false);
             bookTitle = (TextView) rowView.findViewById(R.id.book_title);
             bookAuthor = (TextView) rowView.findViewById(R.id.book_author);
@@ -78,10 +93,16 @@ public class RecommendBooksFragment extends ListFragment{
             BooksModel currentBook = getItem(position);
             bookTitle.setText(currentBook.getBookTitle());
             bookAuthor.setText(currentBook.getBookAuthor());
+            deleteButton.setTag(currentBook);
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    BooksModel bookToRemove = (BooksModel)v.getTag();
+                    String id = bookToRemove.getGoogleBooksID();
+                    removeFavoriteFromParse(id);
+                    remove(bookToRemove);
+                    favoritesSingleton.removeFromFavoritesList(pos);
+                    adapter.notifyDataSetChanged();
                 }
             });
             return rowView;

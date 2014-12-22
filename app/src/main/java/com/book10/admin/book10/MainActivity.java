@@ -17,7 +17,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toRecommendedBooksFragment();
+        toMainFragment();
     }
 
     @Override
@@ -38,8 +38,8 @@ public class MainActivity extends Activity {
         }
     }
 
-    protected void toRecommendedBooksFragment() {
-        MainFragment mainFragment = new MainFragment();
+    protected void toMainFragment() {
+        MainFragment mainFragment = MainFragment.newInstance();
         getFragmentManager().beginTransaction()
                 .add(R.id.container, mainFragment)
                 .commit();

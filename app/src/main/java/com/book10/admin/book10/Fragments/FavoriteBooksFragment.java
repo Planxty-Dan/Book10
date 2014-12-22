@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.book10.admin.book10.Models.BooksModel;
 import com.book10.admin.book10.Models.FavoritesSingleton;
 import com.book10.admin.book10.R;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -23,12 +24,15 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by admin on 12/6/14.
  */
 public class FavoriteBooksFragment extends ListFragment {
 
+    private final String FAVORITES_USERLIST_KEY = "favoritesList";
+    private final String RECOMMENDED_USERLIST_KEY = "recommendedList";
     private final String FAVORITES_PARSE_KEY = "UserFavorites";
     private BookListAdapter adapter;
     public ArrayList<BooksModel> favoriteBooks;
@@ -65,11 +69,6 @@ public class FavoriteBooksFragment extends ListFragment {
                 goToEnterFavoriteBooks();
             }
         });
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
     }
 
     @Override

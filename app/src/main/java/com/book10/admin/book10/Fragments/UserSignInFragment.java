@@ -3,8 +3,6 @@ package com.book10.admin.book10.Fragments;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.book10.admin.book10.R;
+import com.book10.admin.book10.Utilities.PullParseUserLists;
 import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
@@ -63,6 +61,9 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 if (parseUser != null) {
+                    PullParseUserLists pullUserLists = new PullParseUserLists();
+                    pullUserLists.pullFavorites();
+                    pullUserLists.pullRecommendations();
                     Toast.makeText(getActivity(), R.string.login_success, Toast.LENGTH_SHORT).show();
                     FragmentManager fragmentManager = getFragmentManager();
                     fragmentManager.popBackStack();

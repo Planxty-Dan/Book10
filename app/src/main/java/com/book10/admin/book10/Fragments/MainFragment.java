@@ -17,6 +17,11 @@ public class MainFragment extends Fragment{
     private Button favoritesButton;
     private Button recommendationsButton;
 
+    public static MainFragment newInstance() {
+        MainFragment mainFragment = new MainFragment();
+        return mainFragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);

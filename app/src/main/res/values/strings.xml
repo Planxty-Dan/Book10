@@ -41,5 +41,6 @@
     <string name="need_title_author_submit_favorites_message">Please enter a title and author for the book</string>
     <string name="no_results">No results, please check your spelling and try again</string>
     <string name="add_book_button">Add Book</string>
+    <string name="update_recommended_list_button">Update</string>
 
 </resources>

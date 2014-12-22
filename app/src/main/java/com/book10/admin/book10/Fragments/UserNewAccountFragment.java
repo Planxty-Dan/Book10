@@ -15,8 +15,11 @@ import android.widget.Toast;
 
 import com.book10.admin.book10.R;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+
+import java.util.ArrayList;
 
 /**
  * Created by admin on 12/3/14.
@@ -24,6 +27,9 @@ import com.parse.SignUpCallback;
 public class UserNewAccountFragment extends Fragment implements View.OnClickListener{
 
     private final String PASSWORD = "1111";
+    private final String FAVORITES_KEY = "favoritesList";
+    private final String RECOMMENDED_KEY = "recommendedList";
+    private final String UNWANTED_RECOMMENDATIONS_KEY = "unwantedRecommendations";
     private EditText enterEmail;
     private EditText confirmEmail;
     private Button submitNewUser;
@@ -61,9 +67,15 @@ public class UserNewAccountFragment extends Fragment implements View.OnClickList
                 public void done(ParseException e) {
                     if (e == null) {
                         Toast.makeText(getActivity(), R.string.login_success, Toast.LENGTH_SHORT).show();
-                        RecommendBooksFragment recommendBooksFragment = new RecommendBooksFragment();
+                        ArrayList<ParseObject> recommended = new ArrayList<ParseObject>();
+                        ArrayList<ParseObject> favorites = new ArrayList<ParseObject>();
+                        ArrayList<ParseObject> unwantedRecommendations = new ArrayList<ParseObject>();
+                        ParseUser.getCurrentUser().put(RECOMMENDED_KEY, recommended);
+                        ParseUser.getCurrentUser().put(FAVORITES_KEY, favorites);
+                        ParseUser.getCurrentUser().put(UNWANTED_RECOMMENDATIONS_KEY, unwantedRecommendations);
+                        MainFragment mainFragment = MainFragment.newInstance();
                         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.container, null);
+                        fragmentTransaction.replace(R.id.container, mainFragment);
                         fragmentTransaction.commit();
                     } else {
                         Toast.makeText(getActivity(), R.string.parse_exception_create_login + e.toString(), Toast.LENGTH_LONG).show();
