@@ -1,4 +1,4 @@
-package com.book10.admin.book10;
+package com.book10.admin.book10.Activities;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.book10.admin.book10.Fragments.MainFragment;
 import com.book10.admin.book10.Fragments.UserSignInFragment;
+import com.book10.admin.book10.R;
 import com.parse.ParseUser;
 
 public class MainActivity extends Activity {
@@ -41,7 +42,7 @@ public class MainActivity extends Activity {
     protected void toMainFragment() {
         MainFragment mainFragment = MainFragment.newInstance();
         getFragmentManager().beginTransaction()
-                .add(R.id.container, mainFragment)
+                .add(R.id.main_container, mainFragment)
                 .commit();
     }
 
@@ -49,7 +50,7 @@ public class MainActivity extends Activity {
         ParseUser.logOut();
         UserSignInFragment signInFragment = UserSignInFragment.newInstance();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.container, signInFragment)
+        fragmentTransaction.add(R.id.main_container, signInFragment)
                 .commit();
     }
 }

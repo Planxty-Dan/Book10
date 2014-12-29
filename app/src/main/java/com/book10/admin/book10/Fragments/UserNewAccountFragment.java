@@ -1,10 +1,8 @@
 package com.book10.admin.book10.Fragments;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.book10.admin.book10.Activities.MainActivity;
 import com.book10.admin.book10.R;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -73,10 +72,7 @@ public class UserNewAccountFragment extends Fragment implements View.OnClickList
                         ParseUser.getCurrentUser().put(RECOMMENDED_KEY, recommended);
                         ParseUser.getCurrentUser().put(FAVORITES_KEY, favorites);
                         ParseUser.getCurrentUser().put(UNWANTED_RECOMMENDATIONS_KEY, unwantedRecommendations);
-                        MainFragment mainFragment = MainFragment.newInstance();
-                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.container, mainFragment);
-                        fragmentTransaction.commit();
+                        startMainActivity();
                     } else {
                         Toast.makeText(getActivity(), R.string.parse_exception_create_login + e.toString(), Toast.LENGTH_LONG).show();
                     }
@@ -93,5 +89,10 @@ public class UserNewAccountFragment extends Fragment implements View.OnClickList
         } else {
             return false;
         }
+    }
+
+    private void startMainActivity() {
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        startActivity(intent);
     }
 }

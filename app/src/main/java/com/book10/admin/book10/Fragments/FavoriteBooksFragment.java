@@ -10,13 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.book10.admin.book10.Models.BooksModel;
 import com.book10.admin.book10.Models.FavoritesSingleton;
 import com.book10.admin.book10.R;
-import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -24,7 +23,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by admin on 12/6/14.
@@ -66,7 +64,11 @@ public class FavoriteBooksFragment extends ListFragment {
         addBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToEnterFavoriteBooks();
+                if (favoriteBooks.size() < 10) {
+                    goToEnterFavoriteBooks();
+                } else {
+                    Toast.makeText(getActivity(), R.string.ten_favorites, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -99,7 +101,7 @@ public class FavoriteBooksFragment extends ListFragment {
     private void goToEnterFavoriteBooks() {
         EnterFavoriteBooksFragment enterFavoriteBooks = EnterFavoriteBooksFragment.newInstance();
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, enterFavoriteBooks)
+                .replace(R.id.main_container, enterFavoriteBooks)
                 .addToBackStack("enter favorite")
                 .commit();
     }

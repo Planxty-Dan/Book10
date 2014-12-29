@@ -72,8 +72,13 @@ public class RecommendBooksFragment extends ListFragment{
 
     public void setListFromSingleton() {
         recommendedSingleton = RecommendedSingleton.getInstance();
-        recommendedBooks = (ArrayList<BooksModel>) recommendedSingleton.getRecommendedList().subList(0, 10);
-        backUpRecommendations = (ArrayList<BooksModel>) recommendedSingleton.getRecommendedList().subList(10, 20);
+        if (recommendedSingleton.getRecommendedList().size() > 0) {
+            recommendedBooks = (ArrayList<BooksModel>) recommendedSingleton.getRecommendedList().subList(0, 10);
+            backUpRecommendations = (ArrayList<BooksModel>) recommendedSingleton.getRecommendedList().subList(10, 20);
+        } else {
+            recommendedBooks = new ArrayList<BooksModel>();
+            backUpRecommendations = new ArrayList<BooksModel>();
+        }
     }
 
     public class BookListAdapter extends ArrayAdapter<BooksModel> {
@@ -97,12 +102,12 @@ public class RecommendBooksFragment extends ListFragment{
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    BooksModel bookToRemove = (BooksModel)v.getTag();
-                    String id = bookToRemove.getGoogleBooksID();
-                    removeFavoriteFromParse(id);
-                    remove(bookToRemove);
-                    favoritesSingleton.removeFromFavoritesList(pos);
-                    adapter.notifyDataSetChanged();
+//                    BooksModel bookToRemove = (BooksModel)v.getTag();
+//                    String id = bookToRemove.getGoogleBooksID();
+//                    removeFavoriteFromParse(id);
+//                    remove(bookToRemove);
+//                    favoritesSingleton.removeFromFavoritesList(pos);
+//                    adapter.notifyDataSetChanged();
                 }
             });
             return rowView;

@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <activity android:name=".SplashActivity"
+        <activity android:name=".Activities.SplashActivity"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,10 +21,20 @@
         </activity>
 
         <activity
-            android:name="com.book10.admin.book10.MainActivity"
+            android:name=".Activities.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".Activities.UserSignInActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.UserSignIn" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

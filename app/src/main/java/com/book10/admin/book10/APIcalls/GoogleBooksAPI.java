@@ -1,13 +1,10 @@
 package com.book10.admin.book10.APIcalls;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-
 import com.book10.admin.book10.JsonParsing.ParseGoogleBooksJson;
 import com.book10.admin.book10.Models.BooksModel;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +15,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.net.ssl.HttpsURLConnection;
 
 /**
@@ -32,16 +28,8 @@ public class GoogleBooksAPI extends AsyncTask {
 
     }
 
-    private final String SCHEME = "https";
-    private final String AUTHORITY = "www.googleapis.com";
-    private final String PATH_ONE = "books";
-    private final String PATH_TWO = "v1";
-    private final String PATH_THREE = "volumes";
-    private final String QUERY = "q=";
     private final String QUERY_PARAMETER_TITLE = "intitle:";
     private final String QUERY_PARAMETER_AUTHOR = "inauthor:";
-    private final String QUERY_PARAMTER_MAX_RESULTS = "maxResults";
-    private final String MAX_RESULTS_3 = "3";
     private final String KEY = "key=";
     private final String API_KEY = "AIzaSyDb2gixf3_QzXw0-V5ZSxEBt8Midqxza30";
     private String bookTitle;
@@ -57,8 +45,6 @@ public class GoogleBooksAPI extends AsyncTask {
         this.bookAuthor = bookAuthor;
         this.onDataLoadedListener = onDataLoadedListener;
     }
-
-
 
     @Override
     protected void onPreExecute() {

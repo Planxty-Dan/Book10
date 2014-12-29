@@ -37,7 +37,7 @@ public class MainFragment extends Fragment{
             public void onClick(View v) {
                 FavoriteBooksFragment favoriteBooksFragment = FavoriteBooksFragment.newInstance();
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.container, favoriteBooksFragment)
+                        .replace(R.id.main_container, favoriteBooksFragment)
                         .addToBackStack("main")
                         .commit();
             }
@@ -47,7 +47,7 @@ public class MainFragment extends Fragment{
             public void onClick(View v) {
                 RecommendBooksFragment recommendBooksFragment = RecommendBooksFragment.newInstance();
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.container, recommendBooksFragment)
+                        .replace(R.id.main_container, recommendBooksFragment)
                         .addToBackStack("main")
                         .commit();
             }

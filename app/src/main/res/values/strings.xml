@@ -42,5 +42,6 @@
     <string name="no_results">No results, please check your spelling and try again</string>
     <string name="add_book_button">Add Book</string>
     <string name="update_recommended_list_button">Update</string>
+    <string name="ten_favorites">Sorry, you already have the max of 10 favorites entered.</string>
 
 </resources>

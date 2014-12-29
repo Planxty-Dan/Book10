@@ -3,6 +3,8 @@ package com.book10.admin.book10.Fragments;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.book10.admin.book10.Activities.MainActivity;
 import com.book10.admin.book10.R;
+import com.book10.admin.book10.Utilities.CheckParseFavsAndRec;
 import com.book10.admin.book10.Utilities.PullParseUserLists;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -65,8 +70,7 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
                     pullUserLists.pullFavorites();
                     pullUserLists.pullRecommendations();
                     Toast.makeText(getActivity(), R.string.login_success, Toast.LENGTH_SHORT).show();
-                    FragmentManager fragmentManager = getFragmentManager();
-                    fragmentManager.popBackStack();
+                    getUserLists();
                 } else
                     Toast.makeText(getActivity(), R.string.failed_login, Toast.LENGTH_SHORT).show();
             }
@@ -76,7 +80,27 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
     private void newUserSelected() {
         UserNewAccountFragment newAccount = new UserNewAccountFragment();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.container, newAccount)
+        fragmentTransaction.replace(R.id.signin_container, newAccount)
                 .commit();
+    }
+
+    private void getUserLists() {
+        final ProgressDialog progressDialog =new ProgressDialog(getActivity());
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
+        CheckParseFavsAndRec checkParseFavsAndRec = new CheckParseFavsAndRec(new CheckParseFavsAndRec.ParseDataLoadedListener() {
+            @Override
+            public void dataLoaded() {
+                progressDialog.dismiss();
+                startMainActivity();
+            }
+        });
+        checkParseFavsAndRec.checkFavorites();
+        checkParseFavsAndRec.checkRecommendations();
+    }
+
+    private void startMainActivity() {
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        startActivity(intent);
     }
 }
