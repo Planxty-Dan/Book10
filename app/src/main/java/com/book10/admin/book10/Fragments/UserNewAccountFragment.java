@@ -12,7 +12,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.book10.admin.book10.Activities.MainActivity;
+import com.book10.admin.book10.Models.RecommendedSingleton;
 import com.book10.admin.book10.R;
+import com.book10.admin.book10.Utilities.CheckParseFavsAndRec;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -66,13 +68,15 @@ public class UserNewAccountFragment extends Fragment implements View.OnClickList
                 public void done(ParseException e) {
                     if (e == null) {
                         Toast.makeText(getActivity(), R.string.login_success, Toast.LENGTH_SHORT).show();
-                        ArrayList<ParseObject> recommended = new ArrayList<ParseObject>();
-                        ArrayList<ParseObject> favorites = new ArrayList<ParseObject>();
-                        ArrayList<ParseObject> unwantedRecommendations = new ArrayList<ParseObject>();
-                        ParseUser.getCurrentUser().put(RECOMMENDED_KEY, recommended);
-                        ParseUser.getCurrentUser().put(FAVORITES_KEY, favorites);
-                        ParseUser.getCurrentUser().put(UNWANTED_RECOMMENDATIONS_KEY, unwantedRecommendations);
-                        startMainActivity();
+                        CheckParseFavsAndRec checkParseFavsAndRec = new CheckParseFavsAndRec(new CheckParseFavsAndRec.ParseDataLoadedListener() {
+                            @Override
+                            public void dataLoaded() {
+                                Toast.makeText(getActivity(), R.string.login_success, Toast.LENGTH_SHORT).show();
+                                startMainActivity();
+                            }
+                        });
+                        checkParseFavsAndRec.checkFavorites();
+                        checkParseFavsAndRec.checkRecommendations();
                     } else {
                         Toast.makeText(getActivity(), R.string.parse_exception_create_login + e.toString(), Toast.LENGTH_LONG).show();
                     }

@@ -79,8 +79,10 @@ public class FavoriteBooksFragment extends ListFragment {
     }
 
     private void numberOfFavoritesEnteredChecker() {
-        if (favoriteBooks.size() == 0) {
-            noFavoritesEntered();
+        if (favoriteBooks != null) {
+            if (favoriteBooks.size() == 0) {
+                noFavoritesEntered();
+            }
         }
     }
 

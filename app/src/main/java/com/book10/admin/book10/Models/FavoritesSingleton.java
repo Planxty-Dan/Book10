@@ -24,6 +24,9 @@ public class FavoritesSingleton {
     }
 
     public ArrayList<BooksModel> getFavoritesList() {
+        if (favoritesList == null) {
+            favoritesList = new ArrayList<BooksModel>();
+        }
         return favoritesList;
     }
 
