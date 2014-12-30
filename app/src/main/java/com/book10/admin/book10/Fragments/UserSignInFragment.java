@@ -66,11 +66,8 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 if (parseUser != null) {
-                    PullParseUserLists pullUserLists = new PullParseUserLists();
-                    pullUserLists.pullFavorites();
-                    pullUserLists.pullRecommendations();
-                    Toast.makeText(getActivity(), R.string.login_success, Toast.LENGTH_SHORT).show();
                     getUserLists();
+                    Toast.makeText(getActivity(), R.string.login_success, Toast.LENGTH_SHORT).show();
                 } else
                     Toast.makeText(getActivity(), R.string.failed_login, Toast.LENGTH_SHORT).show();
             }

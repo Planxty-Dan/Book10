@@ -2,6 +2,7 @@ package com.book10.admin.book10.Activities;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,9 +49,7 @@ public class MainActivity extends Activity {
 
     private void logOut() {
         ParseUser.logOut();
-        UserSignInFragment signInFragment = UserSignInFragment.newInstance();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.main_container, signInFragment)
-                .commit();
+        Intent intent = new Intent(getApplicationContext(), UserSignInActivity.class);
+        startActivity(intent);
     }
 }
