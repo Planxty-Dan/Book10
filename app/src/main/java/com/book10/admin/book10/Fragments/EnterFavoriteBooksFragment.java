@@ -29,20 +29,15 @@ import java.util.List;
  */
 public class EnterFavoriteBooksFragment extends Fragment{
 
-    private final String FAVORITES_KEY = "UserFavorites";
-    private final String BOOK_KEY = "Book";
+    private final static String FAVORITES_KEY = "UserFavorites";
+    private final static String BOOK_KEY = "Book";
     private EditText enterTitle;
     private EditText enterAuthor;
     private Button submitBookButton;
-    private TextView confirmTitle;
-    private TextView confirmAuthor;
     private String userEnteredTitle;
     private String userEnteredAuthor;
     private int googleBooksArrayIndex = 0;
     private ArrayList<BooksModel> tempBookStorage = new ArrayList<BooksModel>();
-    private GoogleBooksAPI googleBooksAPI;
-    private BooksModel tempBook;
-    private ParseObject bookObject;
     private FavoritesSingleton favoritesSingleton;
 
     public static EnterFavoriteBooksFragment newInstance() {
@@ -53,7 +48,6 @@ public class EnterFavoriteBooksFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         favoritesSingleton = FavoritesSingleton.getInstance();
         View rootView = View.inflate(getActivity(), R.layout.fragment_enter_favorite_book_form, null);
         enterTitle = (EditText) rootView.findViewById(R.id.enter_title);
@@ -82,7 +76,7 @@ public class EnterFavoriteBooksFragment extends Fragment{
     }
 
     private void getBooksFromGoogleAPI() {
-        googleBooksAPI = new GoogleBooksAPI(getActivity(), userEnteredTitle, userEnteredAuthor, new GoogleBooksAPI.OnGoogleBooksDataLoadedListener() {
+        GoogleBooksAPI googleBooksAPI = new GoogleBooksAPI(getActivity(), userEnteredTitle, userEnteredAuthor, new GoogleBooksAPI.OnGoogleBooksDataLoadedListener() {
             @Override
             public void dataLoaded(List<BooksModel> books) {
                 if (books.size() == 0) {
@@ -100,8 +94,8 @@ public class EnterFavoriteBooksFragment extends Fragment{
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View rootView = View.inflate(getActivity(), R.layout.dialog_confirm_added_favorite, null);
         builder.setView(rootView);
-        confirmTitle = (TextView) rootView.findViewById(R.id.confirmation_title);
-        confirmAuthor = (TextView) rootView.findViewById(R.id.confirm_author);
+        TextView confirmTitle = (TextView) rootView.findViewById(R.id.confirmation_title);
+        TextView confirmAuthor = (TextView) rootView.findViewById(R.id.confirm_author);
         confirmTitle.setText(tempBookStorage.get(googleBooksArrayIndex).getBookTitle());
         confirmAuthor.setText(tempBookStorage.get(googleBooksArrayIndex).getBookAuthor());
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -122,7 +116,7 @@ public class EnterFavoriteBooksFragment extends Fragment{
     }
 
     private void acceptedFavorites() {
-        tempBook = tempBookStorage.get(googleBooksArrayIndex);
+        final BooksModel tempBook = tempBookStorage.get(googleBooksArrayIndex);
         ParseQuery bookAlreadyAddedQuery = ParseQuery.getQuery(BOOK_KEY);
         bookAlreadyAddedQuery.whereEqualTo("googleID", tempBook.getGoogleBooksID());
         bookAlreadyAddedQuery.getFirstInBackground( new GetCallback() {
@@ -148,7 +142,7 @@ public class EnterFavoriteBooksFragment extends Fragment{
 
     private void saveFavoritesToParse(ParseObject parseObject, BooksModel tempBook) {
         if (parseObject == null || parseObject.equals("")) {
-            bookObject = new ParseObject(BOOK_KEY);
+            final ParseObject bookObject = new ParseObject(BOOK_KEY);
             bookObject.put("googleID", tempBook.getGoogleBooksID());
             bookObject.put("title", tempBook.getBookTitle());
             bookObject.put("author", tempBook.getBookAuthor());

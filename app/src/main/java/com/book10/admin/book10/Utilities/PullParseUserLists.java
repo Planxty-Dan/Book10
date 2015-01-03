@@ -12,8 +12,8 @@ import java.util.ArrayList;
  */
 public class PullParseUserLists {
 
-    private final String FAVORITES_KEY = "favoritesList";
-    private final String RECOMMENDED_KEY = "recommendedList";
+    private final static String FAVORITES_KEY = "favoritesList";
+    private final static String RECOMMENDED_KEY = "recommendedList";
     private BuildBooksFromParseObjects buildBooks = new BuildBooksFromParseObjects();
 
     public void pullFavorites() {

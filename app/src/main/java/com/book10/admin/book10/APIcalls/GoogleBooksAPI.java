@@ -28,10 +28,10 @@ public class GoogleBooksAPI extends AsyncTask {
 
     }
 
-    private final String QUERY_PARAMETER_TITLE = "intitle:";
-    private final String QUERY_PARAMETER_AUTHOR = "inauthor:";
-    private final String KEY = "key=";
-    private final String API_KEY = "AIzaSyDb2gixf3_QzXw0-V5ZSxEBt8Midqxza30";
+    private final static String QUERY_PARAMETER_TITLE = "intitle:";
+    private final static String QUERY_PARAMETER_AUTHOR = "inauthor:";
+    private final static String KEY = "key=";
+    private final static String API_KEY = "AIzaSyDb2gixf3_QzXw0-V5ZSxEBt8Midqxza30";
     private String bookTitle;
     private String bookAuthor;
     private OnGoogleBooksDataLoadedListener onDataLoadedListener;
