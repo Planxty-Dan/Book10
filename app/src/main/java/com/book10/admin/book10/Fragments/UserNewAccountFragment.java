@@ -28,19 +28,15 @@ import java.util.ArrayList;
 public class UserNewAccountFragment extends Fragment implements View.OnClickListener{
 
     private final String PASSWORD = "1111";
-    private final String FAVORITES_KEY = "favoritesList";
-    private final String RECOMMENDED_KEY = "recommendedList";
-    private final String UNWANTED_RECOMMENDATIONS_KEY = "unwantedRecommendations";
     private EditText enterEmail;
     private EditText confirmEmail;
-    private Button submitNewUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_user_new_account, container, false);
         enterEmail = (EditText) rootView.findViewById(R.id.new_user_email_edittext);
         confirmEmail = (EditText) rootView.findViewById(R.id.new_user_confirm_email_edittext);
-        submitNewUser = (Button) rootView.findViewById(R.id.submit_new_user);
+        Button submitNewUser = (Button) rootView.findViewById(R.id.submit_new_user);
         submitNewUser.setOnClickListener(this);
 
         return rootView;

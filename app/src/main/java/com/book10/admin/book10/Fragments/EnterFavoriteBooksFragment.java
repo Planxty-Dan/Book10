@@ -123,12 +123,12 @@ public class EnterFavoriteBooksFragment extends Fragment{
 
     private void acceptedFavorites() {
         tempBook = tempBookStorage.get(googleBooksArrayIndex);
-        favoritesSingleton.addToFavoritesList(tempBook);
         ParseQuery bookAlreadyAddedQuery = ParseQuery.getQuery(BOOK_KEY);
         bookAlreadyAddedQuery.whereEqualTo("googleID", tempBook.getGoogleBooksID());
         bookAlreadyAddedQuery.getFirstInBackground( new GetCallback() {
             @Override
             public void done(ParseObject parseObject, ParseException e) {
+                favoritesSingleton.addToFavoritesList(tempBook);
                 saveFavoritesToParse(parseObject, tempBook);
                 getFragmentManager().popBackStack();
             }

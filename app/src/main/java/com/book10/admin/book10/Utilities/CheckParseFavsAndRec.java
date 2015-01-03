@@ -21,12 +21,8 @@ public class CheckParseFavsAndRec {
         public void dataLoaded();
     }
 
-    private ArrayList<ParseObject> recommendationsParseObjects;
-    private ArrayList<ParseObject> favoritesParseObjects;
     private ArrayList<BooksModel> favoritesBookObjects;
     private ArrayList<BooksModel> recommendationsBookObjects;
-    private FavoritesSingleton favoritesSingleton = FavoritesSingleton.getInstance();
-    private RecommendedSingleton recommendedSingleton = RecommendedSingleton.getInstance();
     private BuildBooksFromParseObjects buildBooks = new BuildBooksFromParseObjects();
     private ParseDataLoadedListener parseDataLoadedListener;
     private boolean favoritesLoaded = false;
@@ -37,7 +33,8 @@ public class CheckParseFavsAndRec {
     }
 
     public void checkFavorites() {
-        final ParseQuery<ParseObject> favoritesQuery = ParseQuery.getQuery("UserFavorites");
+        final FavoritesSingleton favoritesSingleton = FavoritesSingleton.getInstance();
+        ParseQuery<ParseObject> favoritesQuery = ParseQuery.getQuery("UserFavorites");
         favoritesQuery.whereEqualTo("user", ParseUser.getCurrentUser());
         favoritesQuery.include("book");
         favoritesQuery.findInBackground(new FindCallback<ParseObject>() {
@@ -48,7 +45,7 @@ public class CheckParseFavsAndRec {
                         favoritesBookObjects = new ArrayList<BooksModel>();
                         favoritesSingleton.setFavoritesList(favoritesBookObjects);
                     } else {
-                        favoritesParseObjects = (ArrayList<ParseObject>) parseObjects;
+                        ArrayList<ParseObject> favoritesParseObjects = (ArrayList<ParseObject>) parseObjects;
                         favoritesBookObjects = buildBooks.build(favoritesParseObjects);
                         favoritesSingleton.setFavoritesList(favoritesBookObjects);
                     }
@@ -62,6 +59,7 @@ public class CheckParseFavsAndRec {
     }
 
     public void checkRecommendations() {
+        final RecommendedSingleton recommendedSingleton = RecommendedSingleton.getInstance();
         ParseQuery<ParseObject> recomendationsQuery = ParseQuery.getQuery("recommendationsParseObjects");
         recomendationsQuery.whereEqualTo("user", ParseUser.getCurrentUser());
         recomendationsQuery.findInBackground(new FindCallback<ParseObject>() {
@@ -72,7 +70,7 @@ public class CheckParseFavsAndRec {
                         recommendationsBookObjects = new ArrayList<BooksModel>();
                         recommendedSingleton.setRecommendedList(recommendationsBookObjects);
                     } else {
-                        recommendationsParseObjects = (ArrayList<ParseObject>) parseObjects;
+                        ArrayList<ParseObject> recommendationsParseObjects = (ArrayList<ParseObject>) parseObjects;
                         recommendationsBookObjects = buildBooks.build(recommendationsParseObjects);
                         recommendedSingleton.setRecommendedList(recommendationsBookObjects);
                     }

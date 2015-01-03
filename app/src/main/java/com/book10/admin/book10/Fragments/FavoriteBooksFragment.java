@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.book10.admin.book10.Models.BooksModel;
 import com.book10.admin.book10.Models.FavoritesSingleton;
 import com.book10.admin.book10.R;
@@ -29,8 +28,6 @@ import java.util.ArrayList;
  */
 public class FavoriteBooksFragment extends ListFragment {
 
-    private final String FAVORITES_USERLIST_KEY = "favoritesList";
-    private final String RECOMMENDED_USERLIST_KEY = "recommendedList";
     private final String FAVORITES_PARSE_KEY = "UserFavorites";
     private BookListAdapter adapter;
     public ArrayList<BooksModel> favoriteBooks;
@@ -116,7 +113,9 @@ public class FavoriteBooksFragment extends ListFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            //TODO use position
             final int pos = position;
+            //TODO use convertview
             View rowView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_main_list_item, parent, false);
             bookTitle = (TextView) rowView.findViewById(R.id.book_title);
             bookAuthor = (TextView) rowView.findViewById(R.id.book_author);

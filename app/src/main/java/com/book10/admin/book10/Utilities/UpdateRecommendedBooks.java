@@ -15,9 +15,9 @@ import java.util.List;
  */
 public class UpdateRecommendedBooks {
 
-    private final String USER_FAVORITES_KEY = "UserFavorites";
-    private final String BOOK_CATEGORY_IN_FAVORITES_KEY = "book";
-    private final String USER_CATEGORY_IN_FAVORITES_KEY = "user";
+    private final static String USER_FAVORITES_KEY = "UserFavorites";
+    private final static String BOOK_CATEGORY_IN_FAVORITES_KEY = "book";
+    private final static String USER_CATEGORY_IN_FAVORITES_KEY = "user";
 
     public void getRecommendations() {
         final ParseQuery<ParseObject> favoritesQuery = ParseQuery.getQuery(USER_FAVORITES_KEY);

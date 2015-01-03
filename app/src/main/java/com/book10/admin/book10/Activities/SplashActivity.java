@@ -22,23 +22,15 @@ import java.util.ArrayList;
  */
 public class SplashActivity extends Activity {
 
-    private ArrayList<ParseObject> recommendationsParseObjects;
-    private ArrayList<ParseObject> favoritesParseObjects;
-    private ArrayList<BooksModel> favoritesBookObjects;
-    private ArrayList<BooksModel> recommendationsBookObjects;
-    private FavoritesSingleton favoritesSingleton;
-    private RecommendedSingleton recommendedSingleton = RecommendedSingleton.getInstance();
-    private BuildBooksFromParseObjects buildBooks = new BuildBooksFromParseObjects();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        favoritesSingleton = FavoritesSingleton.getInstance();
         checkLogin();
     }
 
-    protected void checkLogin() {
+    private void checkLogin() {
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
             userSignIn();
@@ -54,7 +46,7 @@ public class SplashActivity extends Activity {
         }
     }
 
-    protected void userSignIn() {
+    private void userSignIn() {
         Intent intent = new Intent(getApplicationContext(), UserSignInActivity.class);
         startActivity(intent);
     }

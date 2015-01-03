@@ -26,10 +26,8 @@ import com.parse.ParseUser;
  */
 public class UserSignInFragment extends Fragment implements View.OnClickListener{
 
-    private final String PASSWORD = "1111";
+    private final static String PASSWORD = "1111";
     private EditText enterEmail;
-    private Button submitEmail;
-    private Button newUser;
 
     public static UserSignInFragment newInstance() {
         UserSignInFragment userSignInFragment = new UserSignInFragment();
@@ -40,8 +38,8 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.fragment_user_sign_in, container, false);
         enterEmail = (EditText) rootview.findViewById(R.id.email_edittext);
-        submitEmail = (Button) rootview.findViewById(R.id.submit_email_sign_in);
-        newUser = (Button) rootview.findViewById(R.id.new_user_button);
+        Button submitEmail = (Button) rootview.findViewById(R.id.submit_email_sign_in);
+        Button newUser = (Button) rootview.findViewById(R.id.new_user_button);
         submitEmail.setOnClickListener(this);
         newUser.setOnClickListener(this);
 

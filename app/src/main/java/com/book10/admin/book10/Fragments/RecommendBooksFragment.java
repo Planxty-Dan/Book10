@@ -24,15 +24,10 @@ import java.util.ArrayList;
  */
 public class RecommendBooksFragment extends ListFragment{
 
-    private final String RECCOMENDED_KEY = "recommendations";
-    private TextView bookTitle;
-    private TextView bookAuthor;
-    private Button deleteButton;
     private Button updateButton;
     private ArrayList<BooksModel> recommendedBooks;
     private ArrayList<BooksModel> backUpRecommendations;
     private RecommendedSingleton recommendedSingleton;
-
 
     public static RecommendBooksFragment newInstance() {
         RecommendBooksFragment recommendBooksFragment = new RecommendBooksFragment();
@@ -91,9 +86,9 @@ public class RecommendBooksFragment extends ListFragment{
         public View getView(int position, View convertView, ViewGroup parent) {
             final int pos = position;
             View rowView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_main_list_item, parent, false);
-            bookTitle = (TextView) rowView.findViewById(R.id.book_title);
-            bookAuthor = (TextView) rowView.findViewById(R.id.book_author);
-            deleteButton = (Button) rowView.findViewById(R.id.delete_button);
+            TextView bookTitle = (TextView) rowView.findViewById(R.id.book_title);
+            TextView bookAuthor = (TextView) rowView.findViewById(R.id.book_author);
+            Button deleteButton = (Button) rowView.findViewById(R.id.delete_button);
 
             BooksModel currentBook = getItem(position);
             bookTitle.setText(currentBook.getBookTitle());

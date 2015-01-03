@@ -13,16 +13,17 @@ import java.util.List;
  * Created by admin on 12/9/14.
  */
 public class ParseGoogleBooksJson {
-    private final String ITEMS_ARRAY_KEY = "items";
-    private final String GOOGLEID_KEY = "id";
-    private final String VOLUME_INFO_KEY = "volumeInfo";
-    private final String TITLE_KEY = "title";
-    private final String AUTHORS_KEY = "authors";
-    private final String DESCRIPTION_KEY = "description";
-    private final String CATEGORIES_KEY = "categories";
-    private final String IMAGES_KEY = "imageLinks";
-    private final String IMAGE_URL_KEY = "thumbnail";
-    private final String NOT_AVAILABLE = "not available";
+
+    private final static String ITEMS_ARRAY_KEY = "items";
+    private final static String GOOGLEID_KEY = "id";
+    private final static String VOLUME_INFO_KEY = "volumeInfo";
+    private final static String TITLE_KEY = "title";
+    private final static String AUTHORS_KEY = "authors";
+    private final static String DESCRIPTION_KEY = "description";
+    private final static String CATEGORIES_KEY = "categories";
+    private final static String IMAGES_KEY = "imageLinks";
+    private final static String IMAGE_URL_KEY = "thumbnail";
+    private final static String NOT_AVAILABLE = "not available";
     private String jsonResults;
     private JSONObject mainJsonObject;
 
@@ -79,8 +80,9 @@ public class ParseGoogleBooksJson {
                 for (int j = 0; j < authorsArray.length(); j++) {
                     StringBuilder builder = new StringBuilder();
                     builder.append(authorsArray.getString(j) + ", ");
-                    author = builder.toString();
+                    author = author + builder.toString();
                 }
+                author = author.substring(0, author.length() -2);
             } else {
                 author = authorsArray.getString(0);
             }
