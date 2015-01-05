@@ -54,7 +54,7 @@ public class RecommendBooksFragment extends ListFragment{
             @Override
             public void onClick(View v) {
                 UpdateRecommendedBooks updateRecommendedBooks = new UpdateRecommendedBooks();
-                updateRecommendedBooks.getRecommendations();
+                updateRecommendedBooks.getUserFavorites();
             }
         });
         setListAdapter(adapter);
