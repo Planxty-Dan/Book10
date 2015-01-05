@@ -1,5 +1,6 @@
 package com.book10.admin.book10.Utilities;
 
+import com.book10.admin.book10.Models.UserMatchesObject;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -7,6 +8,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -31,7 +33,7 @@ public class UpdateRecommendedBooks {
         });
     }
 
-    public void getBooksFromUserFavorites(ArrayList<ParseObject> favorites) {
+    private void getBooksFromUserFavorites(ArrayList<ParseObject> favorites) {
         ArrayList<ParseObject> favoriteBooks = new ArrayList<ParseObject>();
         for (ParseObject userFavorite : favorites) {
             ParseObject thisBook = (ParseObject) userFavorite.get("book");
@@ -54,8 +56,34 @@ public class UpdateRecommendedBooks {
                     String userID = user.getObjectId().toString();
                     matchingUsers.add(userID);
                 }
+                countMatches(matchingUsers);
             }
         });
+    }
+
+    private void countMatches(ArrayList<String> matchingUsers) {
+        HashMap<String, Integer> numberOfUserMatches = new HashMap();
+        for (String userID : matchingUsers) {
+            if (numberOfUserMatches.containsKey(userID)) {
+                numberOfUserMatches.put(userID, numberOfUserMatches.get(userID) + 1);
+            } else {
+                numberOfUserMatches.put(userID, 1);
+            }
+        }
+        sortCountedMatches(numberOfUserMatches);
+    }
+
+    public void sortCountedMatches(HashMap<String, Integer> countedMatches) {
+        ArrayList<UserMatchesObject> sortedUserMatchesList = new ArrayList<UserMatchesObject>();
+        for (int i = 10; i > 0; i--) {
+            for (HashMap.Entry<String, Integer> entry : countedMatches.entrySet()) {
+                if (entry.getValue() == i) {
+                    UserMatchesObject userMatches = new UserMatchesObject(entry.getKey(), entry.getValue());
+                    sortedUserMatchesList.add(userMatches);
+                }
+            }
+        }
+        assignUsersWithSameMatches(sortedUserMatchesList);
     }
 }
 
