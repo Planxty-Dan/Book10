@@ -8,10 +8,15 @@ import java.util.ArrayList;
  */
 public class BuildBooksFromParseObjects {
 
-    public ArrayList<BooksModel> build(ArrayList<ParseObject> favoriteParseObjects) {
+    public ArrayList<BooksModel> build(ArrayList<ParseObject> parseBookObjects) {
         ArrayList<BooksModel> arrayOfBooks = new ArrayList<BooksModel>();
-        for (ParseObject parseBooks: favoriteParseObjects) {
-            ParseObject parseObject = parseBooks.getParseObject("book");
+        for (ParseObject parseBooks: parseBookObjects) {
+            ParseObject parseObject;
+            if (parseBooks.getString("title") == null) {
+                parseObject = parseBooks.getParseObject("book");
+            } else {
+                parseObject = parseBooks;
+            }
             String googleId = parseObject.getString("googleID");
             String title = parseObject.getString("title");
             String author = parseObject.getString("author");

@@ -16,6 +16,7 @@ import com.book10.admin.book10.Models.BooksModel;
 import com.book10.admin.book10.Models.RecommendedSingleton;
 import com.book10.admin.book10.R;
 import com.book10.admin.book10.Utilities.UpdateRecommendedBooks;
+import com.parse.ParseObject;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ public class RecommendBooksFragment extends ListFragment{
     private ArrayList<BooksModel> recommendedBooks;
     private ArrayList<BooksModel> backUpRecommendations;
     private RecommendedSingleton recommendedSingleton;
+    BookListAdapter adapter;
 
     public static RecommendBooksFragment newInstance() {
         RecommendBooksFragment recommendBooksFragment = new RecommendBooksFragment();
@@ -45,7 +47,7 @@ public class RecommendBooksFragment extends ListFragment{
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setListFromSingleton();
-        final BookListAdapter adapter = new BookListAdapter(getActivity(), recommendedBooks);
+        adapter = new BookListAdapter(getActivity(), recommendedBooks);
         if (recommendedBooks.size() == 0) {
             Toast.makeText(getActivity(), R.string.no_recommendations, Toast.LENGTH_SHORT).show();
         }
@@ -55,6 +57,7 @@ public class RecommendBooksFragment extends ListFragment{
             public void onClick(View v) {
                 UpdateRecommendedBooks updateRecommendedBooks = new UpdateRecommendedBooks();
                 updateRecommendedBooks.getUserFavorites();
+                setListFromSingleton();
             }
         });
         setListAdapter(adapter);
@@ -67,9 +70,13 @@ public class RecommendBooksFragment extends ListFragment{
 
     public void setListFromSingleton() {
         recommendedSingleton = RecommendedSingleton.getInstance();
-        if (recommendedSingleton.getRecommendedList().size() > 0) {
-            recommendedBooks = (ArrayList<BooksModel>) recommendedSingleton.getRecommendedList().subList(0, 10);
-            backUpRecommendations = (ArrayList<BooksModel>) recommendedSingleton.getRecommendedList().subList(10, 20);
+        if (recommendedSingleton.getRecommendedList().size() > 0 && recommendedSingleton.getRecommendedList().size() > 10) {
+            recommendedBooks = (ArrayList<BooksModel>) recommendedSingleton.getRecommendedList().subList(0, 9);
+            backUpRecommendations = (ArrayList<BooksModel>) recommendedSingleton.getRecommendedList().subList(10, 19);
+            adapter.notifyDataSetChanged();
+        } else if (recommendedSingleton.getRecommendedList().size() > 0) {
+            recommendedBooks = recommendedSingleton.getRecommendedList();
+            adapter.notifyDataSetChanged();
         } else {
             recommendedBooks = new ArrayList<BooksModel>();
             backUpRecommendations = new ArrayList<BooksModel>();
