@@ -5,6 +5,7 @@ import com.book10.admin.book10.Models.BooksModel;
 import com.book10.admin.book10.Models.FavoritesSingleton;
 import com.book10.admin.book10.Models.RecommendedSingleton;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -60,9 +61,10 @@ public class CheckParseFavsAndRec {
 
     public void checkRecommendations() {
         final RecommendedSingleton recommendedSingleton = RecommendedSingleton.getInstance();
-        ParseQuery<ParseObject> recomendationsQuery = ParseQuery.getQuery("recommendationsParseObjects");
-        recomendationsQuery.whereEqualTo("user", ParseUser.getCurrentUser());
-        recomendationsQuery.findInBackground(new FindCallback<ParseObject>() {
+        ParseQuery<ParseObject> favoritesQuery = ParseQuery.getQuery("UserRecommendations");
+        favoritesQuery.whereEqualTo("user", ParseUser.getCurrentUser());
+        favoritesQuery.include("book");
+        favoritesQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
@@ -82,6 +84,7 @@ public class CheckParseFavsAndRec {
             }
         });
     }
+
 
     private void checkAllDataLoaded() {
         if (favoritesLoaded && recommendationsLoaded) {

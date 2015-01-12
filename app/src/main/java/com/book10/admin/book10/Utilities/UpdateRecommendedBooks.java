@@ -1,9 +1,12 @@
 package com.book10.admin.book10.Utilities;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.util.Log;
 import com.book10.admin.book10.Models.BooksModel;
 import com.book10.admin.book10.Models.RecommendedSingleton;
 import com.book10.admin.book10.Models.UserMatchesObject;
+import com.book10.admin.book10.Utilities.BuildBooksFromParseObjects;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -17,15 +20,32 @@ import java.util.List;
  */
 public class UpdateRecommendedBooks {
 
+    public interface OnRecommendationsUpdate{
+        public void recommendationsUpdated();
+    }
+
     private final static String USER_FAVORITES_KEY = "UserFavorites";
+    private final static String USER_RECOMMENDATIONS_KEY = "UserRecommendations";
     private final static String BOOK_CATEGORY_IN_FAVORITES_KEY = "book";
     private final static String USER_CATEGORY_IN_FAVORITES_KEY = "user";
+    private final static String BOOK_KEY = "Book";
     private RecommendedSingleton recommendedSingleton = RecommendedSingleton.getInstance();
     private ArrayList<BooksModel> recommendedBooks = recommendedSingleton.getRecommendedList();
     private ArrayList<ParseObject> recommendedParseObjectBooks = new ArrayList<ParseObject>();
     private ArrayList<ParseObject> userFavorites = new ArrayList<ParseObject>();
+    private OnRecommendationsUpdate onRecommendationsUpdate;
+    private ProgressDialog progressDialog;
+    private Context context;
+
+    public UpdateRecommendedBooks(Context context, OnRecommendationsUpdate onRecommendationsUpdate) {
+        this.context = context;
+        this.onRecommendationsUpdate = onRecommendationsUpdate;
+    }
 
     public void getUserFavorites() {
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
         final ParseQuery<ParseObject> favoritesQuery = ParseQuery.getQuery(USER_FAVORITES_KEY);
         favoritesQuery.whereEqualTo(USER_CATEGORY_IN_FAVORITES_KEY, ParseUser.getCurrentUser());
         favoritesQuery.include(BOOK_CATEGORY_IN_FAVORITES_KEY);
@@ -89,7 +109,13 @@ public class UpdateRecommendedBooks {
                 }
             }
         }
-        findMatchingUserWithSameNumberOfMatches(sortedUserMatchesList);
+        if (sortedUserMatchesList.size() > 1) {
+            findMatchingUserWithSameNumberOfMatches(sortedUserMatchesList);
+            saveBooks();
+        } else {
+            buildListOfUserIDsForTiedNumberOfMatches(sortedUserMatchesList, 0, 0);
+            saveBooks();
+        }
     }
 
     private void findMatchingUserWithSameNumberOfMatches(ArrayList<UserMatchesObject> sortedUserMatchesList) {
@@ -109,7 +135,6 @@ public class UpdateRecommendedBooks {
             buildListOfUserIDsForTiedNumberOfMatches(sortedUserMatchesList, ArrayListStartIndex, numberOfMatcheUsers);
             ArrayListStartIndex = numberOfMatcheUsers + 1;
         } while (recommendedParseObjectBooks.size() < 21);
-        saveBooks();
     }
 
     private void buildListOfUserIDsForTiedNumberOfMatches(ArrayList<UserMatchesObject> sortedUserMatchesList, int startIndex, int stopIndex) {
@@ -180,6 +205,18 @@ public class UpdateRecommendedBooks {
         }
         recommendedBooks = buildBooks.build(recommendedParseObjectBooks);
         recommendedSingleton.setRecommendedList(recommendedBooks);
+        saveToParse();
+        progressDialog.dismiss();
+        onRecommendationsUpdate.recommendationsUpdated();
+    }
+
+    private void saveToParse() {
+        for (ParseObject book:recommendedParseObjectBooks) {
+            ParseObject userRecommendationsObject = new ParseObject(USER_RECOMMENDATIONS_KEY);
+            userRecommendationsObject.put("user", ParseUser.getCurrentUser());
+            userRecommendationsObject.put("book", ParseObject.createWithoutData(BOOK_KEY, book.getObjectId()));
+            userRecommendationsObject.addUnique(USER_RECOMMENDATIONS_KEY, userRecommendationsObject);
+        }
     }
 }
 

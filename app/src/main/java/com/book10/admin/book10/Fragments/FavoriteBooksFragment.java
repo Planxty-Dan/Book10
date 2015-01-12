@@ -20,7 +20,6 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
 import java.util.ArrayList;
 
 /**
@@ -68,11 +67,6 @@ public class FavoriteBooksFragment extends ListFragment {
                 }
             }
         });
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
     }
 
     private void numberOfFavoritesEnteredChecker() {

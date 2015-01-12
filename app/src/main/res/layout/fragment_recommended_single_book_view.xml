@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:layout_marginLeft="10dp">
+
+    <ImageView
+        android:id="@+id/single_book_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"/>
+
+    <TextView
+        android:id="@+id/single_book_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+        android:text="Title"
+        android:layout_below="@+id/single_book_image"/>
+    <TextView
+        android:id="@+id/single_book_by"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/by"
+        android:textSize="20dp"
+        android:layout_below="@+id/single_book_title"
+        android:layout_marginTop="10dp"/>
+    <TextView
+        android:id="@+id/single_book_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="author"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/single_book_by"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@+id/single_book_title"/>
+    <TextView
+        android:id="@+id/g"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Genre:"
+        android:layout_below="@+id/single_book_by"
+        android:layout_marginTop="10dp"
+        android:textSize="20dp"/>
+    <TextView
+        android:id="@+id/single_book_genre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/g"
+        android:layout_below="@+id/single_book_by"
+        android:text="genre"
+        android:textSize="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"/>
+    <TextView
+        android:id="@+id/single_book_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/g"
+        android:layout_margin="5dp"
+        android:layout_marginTop="10dp"/>
+
+</RelativeLayout>

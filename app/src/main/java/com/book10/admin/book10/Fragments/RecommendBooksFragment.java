@@ -1,5 +1,6 @@
 package com.book10.admin.book10.Fragments;
 
+import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -16,7 +17,11 @@ import com.book10.admin.book10.Models.BooksModel;
 import com.book10.admin.book10.Models.RecommendedSingleton;
 import com.book10.admin.book10.R;
 import com.book10.admin.book10.Utilities.UpdateRecommendedBooks;
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 
@@ -26,10 +31,11 @@ import java.util.ArrayList;
 public class RecommendBooksFragment extends ListFragment{
 
     private Button updateButton;
-    private ArrayList<BooksModel> recommendedBooks;
-    private ArrayList<BooksModel> backUpRecommendations;
-    private RecommendedSingleton recommendedSingleton;
-    BookListAdapter adapter;
+    private ArrayList<BooksModel> recommendedBooks = new ArrayList<BooksModel>();
+    private ArrayList<BooksModel> backUpRecommendations =  new ArrayList<BooksModel>();
+    private RecommendedSingleton recommendedSingleton = RecommendedSingleton.getInstance();;
+    private BookListAdapter adapter;
+    private UpdateRecommendedBooks updateRecommendedBooks;
 
     public static RecommendBooksFragment newInstance() {
         RecommendBooksFragment recommendBooksFragment = new RecommendBooksFragment();
@@ -46,36 +52,58 @@ public class RecommendBooksFragment extends ListFragment{
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setListFromSingleton();
         adapter = new BookListAdapter(getActivity(), recommendedBooks);
+        setListAdapter(adapter);
+        setListFromSingleton();
         if (recommendedBooks.size() == 0) {
             Toast.makeText(getActivity(), R.string.no_recommendations, Toast.LENGTH_SHORT).show();
         }
+        updateRecommendedBooks = new UpdateRecommendedBooks(getActivity(), new UpdateRecommendedBooks.OnRecommendationsUpdate() {
+            @Override
+            public void recommendationsUpdated() {
+                setListFromSingleton();
+            }
+        });
         updateButton.setText(R.string.update_recommended_list_button);
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UpdateRecommendedBooks updateRecommendedBooks = new UpdateRecommendedBooks();
                 updateRecommendedBooks.getUserFavorites();
-                setListFromSingleton();
             }
         });
-        setListAdapter(adapter);
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+
+        RecommendedSingleBookViewFragment recommendedSingleBookViewFragment = RecommendedSingleBookViewFragment.newInstance();
+        BooksModel book = (BooksModel) getListAdapter().getItem(position);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("recommended", book);
+        recommendedSingleBookViewFragment.setArguments(bundle);
+        getFragmentManager().beginTransaction()
+            .replace(R.id.main_container, recommendedSingleBookViewFragment)
+            .addToBackStack("recommendations")
+            .commit();
     }
 
+
+
     public void setListFromSingleton() {
-        recommendedSingleton = RecommendedSingleton.getInstance();
         if (recommendedSingleton.getRecommendedList().size() > 0 && recommendedSingleton.getRecommendedList().size() > 10) {
-            recommendedBooks = (ArrayList<BooksModel>) recommendedSingleton.getRecommendedList().subList(0, 9);
-            backUpRecommendations = (ArrayList<BooksModel>) recommendedSingleton.getRecommendedList().subList(10, 19);
+            recommendedBooks = new ArrayList<BooksModel>(recommendedSingleton.getRecommendedList().subList(0, 10));
+            backUpRecommendations = new ArrayList<BooksModel>(recommendedSingleton.getRecommendedList().subList(10, 20));
+            if (adapter != null) {
+                adapter.clear();
+            }
+            adapter.addAll(recommendedBooks);
             adapter.notifyDataSetChanged();
         } else if (recommendedSingleton.getRecommendedList().size() > 0) {
             recommendedBooks = recommendedSingleton.getRecommendedList();
+            if (adapter != null) {
+                adapter.clear();
+            }
+            adapter.addAll(recommendedBooks);
             adapter.notifyDataSetChanged();
         } else {
             recommendedBooks = new ArrayList<BooksModel>();
@@ -85,17 +113,23 @@ public class RecommendBooksFragment extends ListFragment{
 
     public class BookListAdapter extends ArrayAdapter<BooksModel> {
 
+        private final static String RECOMMENDED_LIST_KEY = "UserRecommendations";
+        private TextView bookTitle;
+        private TextView bookAuthor;
+        private Button deleteButton;
+
         public BookListAdapter(Context context, ArrayList<BooksModel> recommendedList) {
             super(context, 0, recommendedList);
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final int pos = position;
-            View rowView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_main_list_item, parent, false);
-            TextView bookTitle = (TextView) rowView.findViewById(R.id.book_title);
-            TextView bookAuthor = (TextView) rowView.findViewById(R.id.book_author);
-            Button deleteButton = (Button) rowView.findViewById(R.id.delete_button);
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_main_list_item, parent, false);
+            }
+            bookTitle = (TextView) convertView.findViewById(R.id.book_title);
+            bookAuthor = (TextView) convertView.findViewById(R.id.book_author);
+            deleteButton = (Button) convertView.findViewById(R.id.delete_button);
 
             BooksModel currentBook = getItem(position);
             bookTitle.setText(currentBook.getBookTitle());
@@ -104,16 +138,32 @@ public class RecommendBooksFragment extends ListFragment{
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    BooksModel bookToRemove = (BooksModel)v.getTag();
-//                    String id = bookToRemove.getGoogleBooksID();
-//                    removeFavoriteFromParse(id);
-//                    remove(bookToRemove);
-//                    favoritesSingleton.removeFromFavoritesList(pos);
-//                    adapter.notifyDataSetChanged();
+                    BooksModel bookToRemove = (BooksModel) v.getTag();
+                    String id = bookToRemove.getGoogleBooksID();
+                    removeFavoriteFromParse(id);
+                    remove(bookToRemove);
+                    recommendedSingleton.removeFromRecommendedList(position);
+                    if(backUpRecommendations.size() > 0) {
+                        recommendedSingleton.addToRecommendedList(backUpRecommendations.get(0));
+                    }
+                    adapter.notifyDataSetChanged();
                 }
             });
-            return rowView;
+            return convertView;
+        }
+
+        private void removeFavoriteFromParse(String googleID) {
+            ParseQuery findBookToRemove = new ParseQuery("Book");
+            findBookToRemove.whereEqualTo("googleID", googleID);
+            ParseQuery recommendationToRemove = new ParseQuery(RECOMMENDED_LIST_KEY);
+            recommendationToRemove.whereEqualTo("user", ParseUser.getCurrentUser());
+            recommendationToRemove.whereMatchesQuery("book", findBookToRemove);
+            recommendationToRemove.getFirstInBackground(new GetCallback() {
+                @Override
+                public void done(ParseObject parseObject, ParseException e) {
+                    parseObject.deleteInBackground();
+                }
+            });
         }
     }
-
 }

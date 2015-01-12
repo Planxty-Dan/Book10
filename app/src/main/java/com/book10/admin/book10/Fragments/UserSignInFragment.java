@@ -66,6 +66,7 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
                 if (parseUser != null) {
                     getUserLists();
                     Toast.makeText(getActivity(), R.string.login_success, Toast.LENGTH_SHORT).show();
+
                 } else
                     Toast.makeText(getActivity(), R.string.failed_login, Toast.LENGTH_SHORT).show();
             }
@@ -96,6 +97,7 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
 
     private void startMainActivity() {
         Intent intent = new Intent(getActivity(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 }
