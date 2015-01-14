@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.book10.admin.book10.Activities.MainActivity;
+import com.book10.admin.book10.Activities.MainActivity_;
 import com.book10.admin.book10.R;
 import com.book10.admin.book10.Utilities.CheckParseFavsAndRec;
 import com.book10.admin.book10.Utilities.PullParseUserLists;
@@ -96,7 +97,7 @@ public class UserSignInFragment extends Fragment implements View.OnClickListener
     }
 
     private void startMainActivity() {
-        Intent intent = new Intent(getActivity(), MainActivity.class);
+        Intent intent = new Intent(getActivity(), MainActivity_.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

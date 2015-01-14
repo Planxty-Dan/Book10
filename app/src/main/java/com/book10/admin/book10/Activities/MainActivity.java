@@ -14,33 +14,20 @@ import com.book10.admin.book10.Fragments.UserSignInFragment;
 import com.book10.admin.book10.R;
 import com.parse.ParseUser;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ItemSelect;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.OptionsMenuItem;
+import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.ViewById;
+
+@EActivity (R.layout.activity_main)
+@OptionsMenu (R.menu.menu_main)
 public class MainActivity extends Activity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        toMainFragment();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.log_out:
-                logOut();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
+    @AfterViews
     protected void toMainFragment() {
         MainFragment mainFragment = MainFragment.newInstance();
         getFragmentManager().beginTransaction()
@@ -48,7 +35,8 @@ public class MainActivity extends Activity {
                 .commit();
     }
 
-    private void logOut() {
+    @OptionsItem (R.id.log_out)
+    protected void logOut() {
         ParseUser.logOut();
         Intent intent = new Intent(getApplicationContext(), UserSignInActivity.class);
         startActivity(intent);
