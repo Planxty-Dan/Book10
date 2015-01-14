@@ -9,48 +9,31 @@ import android.widget.Button;
 
 import com.book10.admin.book10.R;
 
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.FragmentArg;
+
 /**
  * Created by admin on 12/15/14.
  */
+@EFragment (R.layout.fragment_main)
 public class MainFragment extends Fragment{
 
-    private Button favoritesButton;
-    private Button recommendationsButton;
-
-    public static MainFragment newInstance() {
-        MainFragment mainFragment = new MainFragment();
-        return mainFragment;
+    @Click (R.id.main_favorites_button)
+    protected void favoritesClicked() {
+        FavoriteBooksFragment favoriteBooksFragment = FavoriteBooksFragment.newInstance();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.main_container, favoriteBooksFragment)
+                .addToBackStack("main")
+                .commit();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        favoritesButton = (Button) rootView.findViewById(R.id.main_favorites_button);
-        recommendationsButton = (Button) rootView.findViewById(R.id.main_recommendations_button);
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        favoritesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FavoriteBooksFragment favoriteBooksFragment = FavoriteBooksFragment.newInstance();
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.main_container, favoriteBooksFragment)
-                        .addToBackStack("main")
-                        .commit();
-            }
-        });
-        recommendationsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecommendBooksFragment recommendBooksFragment = RecommendBooksFragment.newInstance();
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.main_container, recommendBooksFragment)
-                        .addToBackStack("main")
-                        .commit();
-            }
-        });
+    @Click (R.id.main_recommendations_button)
+    protected void recommendationsClicked() {
+        RecommendBooksFragment recommendBooksFragment = RecommendBooksFragment.newInstance();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.main_container, recommendBooksFragment)
+                .addToBackStack("main")
+                .commit();
     }
 }

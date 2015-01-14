@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.book10.admin.book10.Fragments.FavoriteBooksFragment;
 import com.book10.admin.book10.Fragments.MainFragment;
+import com.book10.admin.book10.Fragments.MainFragment_;
 import com.book10.admin.book10.Fragments.UserSignInFragment;
 import com.book10.admin.book10.R;
 import com.parse.ParseUser;
@@ -29,7 +30,7 @@ public class MainActivity extends Activity {
 
     @AfterViews
     protected void toMainFragment() {
-        MainFragment mainFragment = MainFragment.newInstance();
+        MainFragment mainFragment = MainFragment_.builder().build();
         getFragmentManager().beginTransaction()
                 .add(R.id.main_container, mainFragment)
                 .commit();
