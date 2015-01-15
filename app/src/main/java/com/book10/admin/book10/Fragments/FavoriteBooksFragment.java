@@ -20,53 +20,51 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 
 /**
  * Created by admin on 12/6/14.
  */
+@EFragment (R.layout.fragment_booklists)
 public class FavoriteBooksFragment extends ListFragment {
 
-    private final String FAVORITES_PARSE_KEY = "UserFavorites";
-    private BookListAdapter adapter;
     public ArrayList<BooksModel> favoriteBooks;
-    private TextView bookTitle;
-    private TextView bookAuthor;
-    private Button deleteButton;
-    private Button addBook;
     private FavoritesSingleton favoritesSingleton;
 
-    public static FavoriteBooksFragment newInstance() {
-        FavoriteBooksFragment favoriteBooksFragment = new FavoriteBooksFragment();
-        return favoriteBooksFragment;
+    protected BookListAdapter adapter;
+
+    @ViewById (R.id.list_button)
+    protected Button addBookButton;
+
+    @AfterViews
+    protected void setButtonText() {
+        addBookButton.setText(R.string.add_book_button);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_booklists, container, false);
-        addBook = (Button) rootView.findViewById(R.id.list_button);
-        return rootView;
+    @Click (R.id.list_button)
+    protected void addBookClicked() {
+        if (favoriteBooks.size() < 10) {
+            goToEnterFavoriteBooks();
+        } else {
+            Toast.makeText(getActivity(), R.string.ten_favorites, Toast.LENGTH_SHORT).show();
+        }
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    @AfterViews
+    protected void setAdapter() {
         favoritesSingleton = FavoritesSingleton.getInstance();
         favoriteBooks = favoritesSingleton.getFavoritesList();
         adapter = new BookListAdapter(getActivity(), favoriteBooks);
         numberOfFavoritesEnteredChecker();
         setListAdapter(adapter);
-        addBook.setText(R.string.add_book_button);
-        addBook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (favoriteBooks.size() < 10) {
-                    goToEnterFavoriteBooks();
-                } else {
-                    Toast.makeText(getActivity(), R.string.ten_favorites, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
     }
 
     private void numberOfFavoritesEnteredChecker() {
@@ -100,6 +98,11 @@ public class FavoriteBooksFragment extends ListFragment {
     }
 
     public class BookListAdapter extends ArrayAdapter<BooksModel> {
+
+        private final String FAVORITES_PARSE_KEY = "UserFavorites";
+        private TextView bookTitle;
+        private TextView bookAuthor;
+        private Button deleteButton;
 
         public BookListAdapter(Context context, ArrayList<BooksModel> favoritesList) {
             super(context, 0, favoritesList);

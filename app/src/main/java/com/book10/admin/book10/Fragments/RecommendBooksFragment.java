@@ -23,11 +23,14 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.androidannotations.annotations.EFragment;
+
 import java.util.ArrayList;
 
 /**
  * Created by admin on 12/2/14.
  */
+@EFragment
 public class RecommendBooksFragment extends ListFragment{
 
     private Button updateButton;
@@ -36,11 +39,6 @@ public class RecommendBooksFragment extends ListFragment{
     private RecommendedSingleton recommendedSingleton = RecommendedSingleton.getInstance();;
     private BookListAdapter adapter;
     private UpdateRecommendedBooks updateRecommendedBooks;
-
-    public static RecommendBooksFragment newInstance() {
-        RecommendBooksFragment recommendBooksFragment = new RecommendBooksFragment();
-        return recommendBooksFragment;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

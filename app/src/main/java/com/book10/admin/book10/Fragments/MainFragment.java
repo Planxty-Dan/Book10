@@ -21,7 +21,7 @@ public class MainFragment extends Fragment{
 
     @Click (R.id.main_favorites_button)
     protected void favoritesClicked() {
-        FavoriteBooksFragment favoriteBooksFragment = FavoriteBooksFragment.newInstance();
+        FavoriteBooksFragment favoriteBooksFragment = FavoriteBooksFragment_.builder().build();
         getFragmentManager().beginTransaction()
                 .replace(R.id.main_container, favoriteBooksFragment)
                 .addToBackStack("main")
@@ -30,7 +30,7 @@ public class MainFragment extends Fragment{
 
     @Click (R.id.main_recommendations_button)
     protected void recommendationsClicked() {
-        RecommendBooksFragment recommendBooksFragment = RecommendBooksFragment.newInstance();
+        RecommendBooksFragment recommendBooksFragment = RecommendBooksFragment_.builder().build();
         getFragmentManager().beginTransaction()
                 .replace(R.id.main_container, recommendBooksFragment)
                 .addToBackStack("main")
