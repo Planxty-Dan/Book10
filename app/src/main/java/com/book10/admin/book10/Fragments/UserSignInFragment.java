@@ -45,9 +45,9 @@ public class UserSignInFragment extends Fragment{
 
     @Click(R.id.new_user_button)
     protected void newUserSelected() {
-        UserNewAccountFragment newAccount = new UserNewAccountFragment();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.signin_container, newAccount)
+        UserNewAccountFragment newAccount = UserNewAccountFragment_.builder().build();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.signin_container, newAccount)
                 .commit();
     }
 

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,11 @@ public class FavoriteBooksFragment extends ListFragment {
     @AfterViews
     protected void setButtonText() {
         addBookButton.setText(R.string.add_book_button);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return null;
     }
 
     @Click (R.id.list_button)

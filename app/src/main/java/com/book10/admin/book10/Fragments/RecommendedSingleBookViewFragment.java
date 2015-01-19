@@ -12,9 +12,12 @@ import com.book10.admin.book10.Models.BooksModel;
 import com.book10.admin.book10.R;
 import com.squareup.picasso.Picasso;
 
+import org.androidannotations.annotations.EFragment;
+
 /**
  * Created by admin on 1/9/15.
  */
+@EFragment(R.layout.fragment_recommended_single_book_view)
 public class RecommendedSingleBookViewFragment extends Fragment {
 
     public static RecommendedSingleBookViewFragment newInstance() {

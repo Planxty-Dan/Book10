@@ -22,6 +22,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ItemSelect;
 import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 
@@ -63,20 +64,18 @@ public class RecommendBooksFragment extends ListFragment{
         });
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        RecommendedSingleBookViewFragment recommendedSingleBookViewFragment = RecommendedSingleBookViewFragment.newInstance();
+    @ItemSelect
+    protected void listItemSelected(boolean selected, int position) {
+        RecommendedSingleBookViewFragment recommendedSingleBookViewFragment = RecommendedSingleBookViewFragment_.builder().build();
         BooksModel book = (BooksModel) getListAdapter().getItem(position);
         Bundle bundle = new Bundle();
         bundle.putParcelable("recommended", book);
         recommendedSingleBookViewFragment.setArguments(bundle);
         getFragmentManager().beginTransaction()
-            .replace(R.id.main_container, recommendedSingleBookViewFragment)
-            .addToBackStack("recommendations")
-            .commit();
+                .replace(R.id.main_container, recommendedSingleBookViewFragment)
+                .addToBackStack("recommendations")
+                .commit();
     }
-
-
 
     public void setListFromSingleton() {
         if (recommendedSingleton.getRecommendedList().size() > 0 && recommendedSingleton.getRecommendedList().size() > 10) {

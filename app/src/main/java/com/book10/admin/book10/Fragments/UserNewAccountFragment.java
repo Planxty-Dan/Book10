@@ -20,11 +20,14 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import org.androidannotations.annotations.EFragment;
+
 import java.util.ArrayList;
 
 /**
  * Created by admin on 12/3/14.
  */
+@EFragment(R.layout.fragment_user_new_account)
 public class UserNewAccountFragment extends Fragment implements View.OnClickListener{
 
     private final String PASSWORD = "1111";
