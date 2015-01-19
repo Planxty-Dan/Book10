@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +19,8 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -36,10 +32,9 @@ import java.util.ArrayList;
 @EFragment (R.layout.fragment_booklists)
 public class FavoriteBooksFragment extends ListFragment {
 
-    public ArrayList<BooksModel> favoriteBooks;
+    private ArrayList<BooksModel> favoriteBooks;
     private FavoritesSingleton favoritesSingleton;
-
-    protected BookListAdapter adapter;
+    private BookListAdapter adapter;
 
     @ViewById (R.id.list_button)
     protected Button addBookButton;
@@ -100,24 +95,21 @@ public class FavoriteBooksFragment extends ListFragment {
     public class BookListAdapter extends ArrayAdapter<BooksModel> {
 
         private final String FAVORITES_PARSE_KEY = "UserFavorites";
-        private TextView bookTitle;
-        private TextView bookAuthor;
-        private Button deleteButton;
+        private Context context;
 
         public BookListAdapter(Context context, ArrayList<BooksModel> favoritesList) {
             super(context, 0, favoritesList);
+            this.context = context;
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            //TODO use position
-            final int pos = position;
-            //TODO use convertview
-            View rowView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_main_list_item, parent, false);
-            bookTitle = (TextView) rowView.findViewById(R.id.book_title);
-            bookAuthor = (TextView) rowView.findViewById(R.id.book_author);
-            deleteButton = (Button) rowView.findViewById(R.id.delete_button);
-
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(context).inflate(R.layout.fragment_main_list_item, parent, false);
+            }
+            TextView bookTitle = (TextView) convertView.findViewById(R.id.book_title);
+            TextView bookAuthor = (TextView) convertView.findViewById(R.id.book_author);
+            Button deleteButton = (Button) convertView.findViewById(R.id.delete_button);
             BooksModel currentBook = getItem(position);
             bookTitle.setText(currentBook.getBookTitle());
             bookAuthor.setText(currentBook.getBookAuthor());
@@ -129,11 +121,11 @@ public class FavoriteBooksFragment extends ListFragment {
                     String id = bookToRemove.getGoogleBooksID();
                     removeFavoriteFromParse(id);
                     remove(bookToRemove);
-                    favoritesSingleton.removeFromFavoritesList(pos);
+                    favoritesSingleton.removeFromFavoritesList(position);
                     adapter.notifyDataSetChanged();
                 }
             });
-            return rowView;
+            return convertView;
         }
 
         private void removeFavoriteFromParse(String googleID) {

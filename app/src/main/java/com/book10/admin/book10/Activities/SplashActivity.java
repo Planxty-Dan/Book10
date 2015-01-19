@@ -55,12 +55,6 @@ public class SplashActivity extends Activity {
         checkLogin();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        finish();
-    }
-
     private void startMainActivity() {
         Intent intent = new Intent(getApplicationContext(), MainActivity_.class);
         startActivity(intent);
