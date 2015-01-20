@@ -92,7 +92,7 @@ public class FavoriteBooksFragment extends Fragment{
     }
 
     private void goToEnterFavoriteBooks() {
-        EnterFavoriteBooksFragment enterFavoriteBooks = EnterFavoriteBooksFragment.newInstance();
+        EnterFavoriteBooksFragment enterFavoriteBooks = EnterFavoriteBooksFragment_.builder().build();
         getFragmentManager().beginTransaction()
                 .replace(R.id.main_container, enterFavoriteBooks)
                 .addToBackStack("enter favorite")

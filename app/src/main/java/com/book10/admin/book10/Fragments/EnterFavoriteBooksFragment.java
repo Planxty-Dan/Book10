@@ -21,61 +21,49 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by admin on 12/16/14.
  */
+@EFragment (R.layout.fragment_enter_favorite_book_form)
 public class EnterFavoriteBooksFragment extends Fragment{
 
     private final static String FAVORITES_KEY = "UserFavorites";
     private final static String BOOK_KEY = "Book";
-    private EditText enterTitle;
-    private EditText enterAuthor;
-    private Button submitBookButton;
-    private String userEnteredTitle;
-    private String userEnteredAuthor;
     private int googleBooksArrayIndex = 0;
     private ArrayList<BooksModel> tempBookStorage = new ArrayList<BooksModel>();
-    private FavoritesSingleton favoritesSingleton;
 
-    public static EnterFavoriteBooksFragment newInstance() {
-        EnterFavoriteBooksFragment enterFavoriteBooks = new EnterFavoriteBooksFragment();
-        return enterFavoriteBooks;
+    @ViewById (R.id.enter_title)
+    protected EditText enterTitle;
+
+    @ViewById (R.id.enter_author)
+    protected EditText enterAuthor;
+
+    @ViewById (R.id.submit_favorite_book_button)
+    protected Button submitBookButton;
+
+    @Click (R.id.submit_favorite_book_button)
+    protected void submitBookClicked() {
+        String userEnteredTitle = enterTitle.getText().toString();
+        String userEnteredAuthor = enterAuthor.getText().toString();
+        if (userEnteredTitle.length() == 0 || userEnteredAuthor.length() == 0) {
+            Toast.makeText(getActivity(), R.string.need_title_author_submit_favorites_message, Toast.LENGTH_SHORT).show();
+        } else {
+            tempBookStorage.clear();
+            googleBooksArrayIndex = 0;
+            getBooksFromGoogleAPI(userEnteredTitle, userEnteredAuthor);
+        }
     }
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        favoritesSingleton = FavoritesSingleton.getInstance();
-        View rootView = View.inflate(getActivity(), R.layout.fragment_enter_favorite_book_form, null);
-        enterTitle = (EditText) rootView.findViewById(R.id.enter_title);
-        enterAuthor = (EditText) rootView.findViewById(R.id.enter_author);
-        submitBookButton = (Button) rootView.findViewById(R.id.submit_favorite_book_button);
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        submitBookButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userEnteredTitle = enterTitle.getText().toString();
-                userEnteredAuthor = enterAuthor.getText().toString();
-                if (userEnteredTitle.length() == 0 || userEnteredAuthor.length() == 0) {
-                    Toast.makeText(getActivity(), R.string.need_title_author_submit_favorites_message, Toast.LENGTH_SHORT).show();
-                } else {
-                    tempBookStorage.clear();
-                    googleBooksArrayIndex = 0;
-                    getBooksFromGoogleAPI();
-                }
-            }
-        });
-    }
-
-    private void getBooksFromGoogleAPI() {
+    private void getBooksFromGoogleAPI(String userEnteredTitle, String userEnteredAuthor) {
         GoogleBooksAPI googleBooksAPI = new GoogleBooksAPI(getActivity(), userEnteredTitle, userEnteredAuthor, new GoogleBooksAPI.OnGoogleBooksDataLoadedListener() {
             @Override
             public void dataLoaded(List<BooksModel> books) {
@@ -117,6 +105,7 @@ public class EnterFavoriteBooksFragment extends Fragment{
 
     private void acceptedFavorites() {
         final BooksModel tempBook = tempBookStorage.get(googleBooksArrayIndex);
+        final FavoritesSingleton favoritesSingleton = FavoritesSingleton.getInstance();
         ParseQuery bookAlreadyAddedQuery = ParseQuery.getQuery(BOOK_KEY);
         bookAlreadyAddedQuery.whereEqualTo("googleID", tempBook.getGoogleBooksID());
         bookAlreadyAddedQuery.getFirstInBackground( new GetCallback() {
