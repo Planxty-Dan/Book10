@@ -40,7 +40,7 @@ public class FavoriteBooksFragment extends Fragment{
     private BookListAdapter adapter;
 
     @ViewById (R.id.list)
-    protected ListView favoritesList;
+    protected ListView listView;
 
     @ViewById (R.id.list_button)
     protected Button addBookButton;
@@ -66,7 +66,7 @@ public class FavoriteBooksFragment extends Fragment{
         favoriteBooks = favoritesSingleton.getFavoritesList();
         adapter = new BookListAdapter(getActivity(), favoriteBooks);
         numberOfFavoritesEnteredChecker();
-        favoritesList.setAdapter(adapter);
+        listView.setAdapter(adapter);
     }
 
     private void numberOfFavoritesEnteredChecker() {

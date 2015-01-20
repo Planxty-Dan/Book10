@@ -1,5 +1,6 @@
 package com.book10.admin.book10.Fragments;
 
+import android.app.Fragment;
 import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ItemSelect;
 import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ import java.util.ArrayList;
  * Created by admin on 12/2/14.
  */
 @EFragment (R.layout.fragment_booklists)
-public class RecommendBooksFragment extends ListFragment{
+public class RecommendBooksFragment extends Fragment{
 
     private ArrayList<BooksModel> recommendedBooks = new ArrayList<BooksModel>();
     private ArrayList<BooksModel> backUpRecommendations =  new ArrayList<BooksModel>();
@@ -38,13 +40,16 @@ public class RecommendBooksFragment extends ListFragment{
     private BookListAdapter adapter;
     private UpdateRecommendedBooks updateRecommendedBooks;
 
+    @ViewById (R.id.list)
+    protected ListView listView;
+
     @ViewById (R.id.list_button)
     protected Button updateButton;
 
     @AfterViews
     protected void adapterSetUp() {
         adapter = new BookListAdapter(getActivity(), recommendedBooks);
-        setListAdapter(adapter);
+        listView.setAdapter(adapter);
         setListFromSingleton();
         if (recommendedBooks.size() == 0) {
             Toast.makeText(getActivity(), R.string.no_recommendations, Toast.LENGTH_SHORT).show();
@@ -64,10 +69,10 @@ public class RecommendBooksFragment extends ListFragment{
         });
     }
 
-    @ItemSelect
-    protected void listItemSelected(boolean selected, int position) {
+    @ItemClick (R.id.list)
+    public void listItemSelected(int position) {
         RecommendedSingleBookViewFragment recommendedSingleBookViewFragment = RecommendedSingleBookViewFragment_.builder().build();
-        BooksModel book = (BooksModel) getListAdapter().getItem(position);
+        BooksModel book = (BooksModel) listView.getAdapter().getItem(position);
         Bundle bundle = new Bundle();
         bundle.putParcelable("recommended", book);
         recommendedSingleBookViewFragment.setArguments(bundle);
@@ -75,6 +80,17 @@ public class RecommendBooksFragment extends ListFragment{
                 .replace(R.id.main_container, recommendedSingleBookViewFragment)
                 .addToBackStack("recommendations")
                 .commit();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setListFromSingleton();
     }
 
     public void setListFromSingleton() {
@@ -97,6 +113,8 @@ public class RecommendBooksFragment extends ListFragment{
             recommendedBooks = new ArrayList<BooksModel>();
             backUpRecommendations = new ArrayList<BooksModel>();
         }
+
+
     }
 
     public class BookListAdapter extends ArrayAdapter<BooksModel> {

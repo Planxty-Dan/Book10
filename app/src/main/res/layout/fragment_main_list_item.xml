@@ -3,7 +3,8 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-    android:background="@android:color/background_light">
+    android:background="@android:color/background_light"
+    android:isScrollContainer="true">
 
     <TextView
         android:id="@+id/book_title"
@@ -43,6 +44,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignBottom="@id/by"
         android:text="X"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="10dp"
+        android:focusable="false"/>
 
 </RelativeLayout>

@@ -12,7 +12,9 @@ import com.book10.admin.book10.Models.BooksModel;
 import com.book10.admin.book10.R;
 import com.squareup.picasso.Picasso;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
 
 /**
  * Created by admin on 1/9/15.
@@ -20,38 +22,30 @@ import org.androidannotations.annotations.EFragment;
 @EFragment(R.layout.fragment_recommended_single_book_view)
 public class RecommendedSingleBookViewFragment extends Fragment {
 
-    public static RecommendedSingleBookViewFragment newInstance() {
-        RecommendedSingleBookViewFragment recommendedSingleBookViewFragment = new RecommendedSingleBookViewFragment();
-        return recommendedSingleBookViewFragment;
-    }
+    @ViewById (R.id.single_book_image)
+    protected ImageView image;
 
-    private ImageView image;
-    private TextView title;
-    private TextView author;
-    private TextView genre;
-    private TextView description;
+    @ViewById (R.id.single_book_title)
+    protected TextView title;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recommended_single_book_view, container, false);
-        image = (ImageView) rootView.findViewById(R.id.single_book_image);
-        title = (TextView) rootView.findViewById(R.id.single_book_title);
-        author = (TextView) rootView.findViewById(R.id.single_book_author);
-        genre = (TextView) rootView.findViewById(R.id.single_book_genre);
-        description = (TextView) rootView.findViewById(R.id.single_book_description);
-        return rootView;
-    }
+    @ViewById (R.id.single_book_author)
+    protected TextView author;
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    @ViewById (R.id.single_book_genre)
+    protected TextView genre;
+
+    @ViewById (R.id.single_book_description)
+    protected TextView description;
+
+    @AfterViews
+    protected void setView() {
         BooksModel book = getArguments().getParcelable("recommended");
         title.setText(book.getBookTitle());
         author.setText(book.getBookAuthor());
         genre.setText(book.getBookGenre());
         description.setText(book.getBookDescription());
         if (book.getBookImage() != null) {
-            Picasso.with(getActivity()).load(book.getBookImage()).resize(50, 50).into(image);
+            Picasso.with(getActivity()).load(book.getBookImage()).resize(250, 375).into(image);
         }
     }
 }
