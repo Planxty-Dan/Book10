@@ -1,6 +1,7 @@
 package com.book10.admin.book10.Fragments;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.ListFragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.book10.admin.book10.Models.BooksModel;
@@ -31,11 +33,14 @@ import java.util.ArrayList;
  * Created by admin on 12/6/14.
  */
 @EFragment (R.layout.fragment_booklists)
-public class FavoriteBooksFragment extends ListFragment {
+public class FavoriteBooksFragment extends Fragment{
 
     private ArrayList<BooksModel> favoriteBooks;
     private FavoritesSingleton favoritesSingleton;
     private BookListAdapter adapter;
+
+    @ViewById (R.id.list)
+    protected ListView favoritesList;
 
     @ViewById (R.id.list_button)
     protected Button addBookButton;
@@ -43,11 +48,7 @@ public class FavoriteBooksFragment extends ListFragment {
     @AfterViews
     protected void setButtonText() {
         addBookButton.setText(R.string.add_book_button);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return null;
+        setAdapter();
     }
 
     @Click (R.id.list_button)
@@ -65,7 +66,7 @@ public class FavoriteBooksFragment extends ListFragment {
         favoriteBooks = favoritesSingleton.getFavoritesList();
         adapter = new BookListAdapter(getActivity(), favoriteBooks);
         numberOfFavoritesEnteredChecker();
-        setListAdapter(adapter);
+        favoritesList.setAdapter(adapter);
     }
 
     private void numberOfFavoritesEnteredChecker() {
